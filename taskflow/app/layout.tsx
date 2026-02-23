@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/components/theme/theme-provider';
-import { TaskProvider } from '@/lib/task-store';
+import { TrendProvider } from '@/lib/trend-store';
 import { Sidebar } from '@/components/layout/sidebar';
 import { Header } from '@/components/layout/header';
 import { Toaster } from 'sonner';
@@ -19,8 +19,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'TaskFlow – Productivity Dashboard',
-  description: 'Modern task management and productivity dashboard built with Next.js 14',
+  title: 'LocalTrend AI - Discover Local Trends',
+  description: 'Discover what\'s trending in your city. AI-powered trend detection for creators and businesses.',
 };
 
 export default function RootLayout({
@@ -32,7 +32,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
-          <TaskProvider>
+          <TrendProvider>
             <TooltipProvider>
               <div className="relative min-h-screen bg-background bg-gradient-mesh">
                 <div className="hidden md:fixed md:inset-y-0 md:flex md:w-64 md:flex-col">
@@ -59,7 +59,7 @@ export default function RootLayout({
                 }}
               />
             </TooltipProvider>
-          </TaskProvider>
+          </TrendProvider>
         </ThemeProvider>
       </body>
     </html>
