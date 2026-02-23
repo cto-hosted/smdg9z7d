@@ -1,0 +1,34 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Next.js
+taskflow/.next/
+taskflow/out/
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Build outputs
+taskflow/build/
+
+# TypeScript
+*.tsbuildinfo
+taskflow/next-env.d.ts
+
+# Debug
+.DS_Store
+*.pem
+
+# Vercel
+.vercel
+
+# Testing
+coverage/

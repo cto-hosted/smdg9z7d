@@ -1,0 +1,275 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e5]:
+      - generic [ref=e6]:
+        - img [ref=e8]
+        - generic [ref=e10]: TaskFlow
+      - navigation [ref=e11]:
+        - link "Dashboard" [ref=e12] [cursor=pointer]:
+          - /url: /
+          - img [ref=e13]
+          - text: Dashboard
+        - link "Tasks" [ref=e18] [cursor=pointer]:
+          - /url: /tasks
+          - img [ref=e19]
+          - text: Tasks
+        - link "Analytics" [ref=e23] [cursor=pointer]:
+          - /url: /analytics
+          - img [ref=e24]
+          - text: Analytics
+      - generic [ref=e26]:
+        - paragraph [ref=e27]: Pro Tip
+        - paragraph [ref=e28]: Use filters to quickly find your tasks by status, priority, or category.
+    - generic [ref=e29]:
+      - banner [ref=e30]:
+        - generic [ref=e31]:
+          - heading "Tasks" [level=1] [ref=e32]
+          - paragraph [ref=e33]: Manage and track all your tasks.
+        - generic [ref=e34]:
+          - generic [ref=e37]: 33% done
+          - button "Toggle theme" [ref=e38]:
+            - img
+          - generic [ref=e40]: TF
+      - main [ref=e41]:
+        - generic [ref=e42]:
+          - generic [ref=e43]:
+            - generic [ref=e44]:
+              - heading "All Tasks" [level=2] [ref=e45]
+              - paragraph [ref=e46]: 12 of 12 tasks
+            - button "New Task" [ref=e47]:
+              - img
+              - generic [ref=e48]: New Task
+          - generic [ref=e50]:
+            - generic [ref=e51]:
+              - img [ref=e52]
+              - textbox "Search tasks..." [ref=e55]
+            - combobox [ref=e56]:
+              - generic: All Status
+              - img
+            - combobox [ref=e57]:
+              - generic: All Priority
+              - img
+            - combobox [ref=e58]:
+              - generic: All Categories
+              - img
+          - generic [ref=e60]:
+            - generic [ref=e62]:
+              - button "Mark incomplete" [ref=e63]:
+                - img [ref=e64]
+              - generic [ref=e67]:
+                - generic [ref=e68]:
+                  - heading "Design new landing page" [level=3] [ref=e69]
+                  - button [ref=e70]:
+                    - img
+                - paragraph [ref=e71]: Create wireframes and mockups for the new marketing landing page with modern glassmorphism design.
+                - generic [ref=e72]:
+                  - generic [ref=e74]: Design
+                  - generic [ref=e75]:
+                    - img
+                    - text: Completed
+                  - generic [ref=e76]: High
+                - generic [ref=e77]:
+                  - img [ref=e78]
+                  - text: Due Feb 21, 2026
+            - generic [ref=e81]:
+              - button "Mark complete" [ref=e82]:
+                - img [ref=e83]
+              - generic [ref=e85]:
+                - generic [ref=e86]:
+                  - heading "Implement user authentication" [level=3] [ref=e87]
+                  - button [ref=e88]:
+                    - img
+                - paragraph [ref=e89]: Set up NextAuth.js with Google and GitHub OAuth providers.
+                - generic [ref=e90]:
+                  - generic [ref=e92]: Development
+                  - generic [ref=e93]:
+                    - img
+                    - text: In Progress
+                  - generic [ref=e94]: High
+                - generic [ref=e95]:
+                  - img [ref=e96]
+                  - text: Due Feb 26, 2026
+            - generic [ref=e99]:
+              - button "Mark complete" [ref=e100]:
+                - img [ref=e101]
+              - generic [ref=e103]:
+                - generic [ref=e104]:
+                  - heading "Write API documentation" [level=3] [ref=e105]
+                  - button [ref=e106]:
+                    - img
+                - paragraph [ref=e107]: Document all REST API endpoints with request/response examples.
+                - generic [ref=e108]:
+                  - generic [ref=e110]: Documentation
+                  - generic [ref=e111]:
+                    - img
+                    - text: To Do
+                  - generic [ref=e112]: Medium
+                - generic [ref=e113]:
+                  - img [ref=e114]
+                  - text: Due Mar 2, 2026
+            - generic [ref=e117]:
+              - button "Mark complete" [ref=e118]:
+                - img [ref=e119]
+              - generic [ref=e121]:
+                - generic [ref=e122]:
+                  - heading "Fix checkout flow bug" [level=3] [ref=e123]
+                  - button [ref=e124]:
+                    - img
+                - paragraph [ref=e125]: Users are unable to complete checkout when using PayPal. Investigate and resolve.
+                - generic [ref=e126]:
+                  - generic [ref=e128]: Development
+                  - generic [ref=e129]:
+                    - img
+                    - text: In Progress
+                  - generic [ref=e130]: High
+                - generic [ref=e131]:
+                  - img [ref=e132]
+                  - text: Due Feb 24, 2026
+            - generic [ref=e135]:
+              - button "Mark incomplete" [ref=e136]:
+                - img [ref=e137]
+              - generic [ref=e140]:
+                - generic [ref=e141]:
+                  - heading "Set up CI/CD pipeline" [level=3] [ref=e142]
+                  - button [ref=e143]:
+                    - img
+                - paragraph [ref=e144]: Configure GitHub Actions for automated testing and deployment.
+                - generic [ref=e145]:
+                  - generic [ref=e147]: DevOps
+                  - generic [ref=e148]:
+                    - img
+                    - text: Completed
+                  - generic [ref=e149]: Medium
+                - generic [ref=e150]:
+                  - img [ref=e151]
+                  - text: Due Feb 18, 2026
+            - generic [ref=e154]:
+              - button "Mark complete" [ref=e155]:
+                - img [ref=e156]
+              - generic [ref=e158]:
+                - generic [ref=e159]:
+                  - heading "Conduct user interviews" [level=3] [ref=e160]
+                  - button [ref=e161]:
+                    - img
+                - paragraph [ref=e162]: Schedule and conduct 5 user interviews to gather feedback on the new dashboard.
+                - generic [ref=e163]:
+                  - generic [ref=e165]: Research
+                  - generic [ref=e166]:
+                    - img
+                    - text: To Do
+                  - generic [ref=e167]: Medium
+                - generic [ref=e168]:
+                  - img [ref=e169]
+                  - text: Due Mar 5, 2026
+            - generic [ref=e172]:
+              - button "Mark complete" [ref=e173]:
+                - img [ref=e174]
+              - generic [ref=e176]:
+                - generic [ref=e177]:
+                  - heading "Optimize database queries" [level=3] [ref=e178]
+                  - button [ref=e179]:
+                    - img
+                - paragraph [ref=e180]: Profile slow queries and add appropriate indexes to improve performance.
+                - generic [ref=e181]:
+                  - generic [ref=e183]: Development
+                  - generic [ref=e184]:
+                    - img
+                    - text: To Do
+                  - generic [ref=e185]: High
+                - generic [ref=e186]:
+                  - img [ref=e187]
+                  - text: Due Feb 28, 2026
+            - generic [ref=e190]:
+              - button "Mark incomplete" [ref=e191]:
+                - img [ref=e192]
+              - generic [ref=e195]:
+                - generic [ref=e196]:
+                  - heading "Update privacy policy" [level=3] [ref=e197]
+                  - button [ref=e198]:
+                    - img
+                - paragraph [ref=e199]: Review and update privacy policy to comply with new GDPR requirements.
+                - generic [ref=e200]:
+                  - generic [ref=e202]: Legal
+                  - generic [ref=e203]:
+                    - img
+                    - text: Completed
+                  - generic [ref=e204]: Low
+                - generic [ref=e205]:
+                  - img [ref=e206]
+                  - text: Due Feb 15, 2026
+            - generic [ref=e209]:
+              - button "Mark complete" [ref=e210]:
+                - img [ref=e211]
+              - generic [ref=e213]:
+                - generic [ref=e214]:
+                  - heading "Mobile app beta testing" [level=3] [ref=e215]
+                  - button [ref=e216]:
+                    - img
+                - paragraph [ref=e217]: Coordinate beta testing program with 20 selected users.
+                - generic [ref=e218]:
+                  - generic [ref=e220]: Testing
+                  - generic [ref=e221]:
+                    - img
+                    - text: In Progress
+                  - generic [ref=e222]: Medium
+                - generic [ref=e223]:
+                  - img [ref=e224]
+                  - text: Due Mar 9, 2026
+            - generic [ref=e227]:
+              - button "Mark complete" [ref=e228]:
+                - img [ref=e229]
+              - generic [ref=e231]:
+                - generic [ref=e232]:
+                  - heading "Create onboarding tutorial" [level=3] [ref=e233]
+                  - button [ref=e234]:
+                    - img
+                - paragraph [ref=e235]: Design and implement an interactive onboarding flow for new users.
+                - generic [ref=e236]:
+                  - generic [ref=e238]: Design
+                  - generic [ref=e239]:
+                    - img
+                    - text: To Do
+                  - generic [ref=e240]: Low
+                - generic [ref=e241]:
+                  - img [ref=e242]
+                  - text: Due Mar 16, 2026
+            - generic [ref=e245]:
+              - button "Mark complete" [ref=e246]:
+                - img [ref=e247]
+              - generic [ref=e249]:
+                - generic [ref=e250]:
+                  - heading "Security audit" [level=3] [ref=e251]
+                  - button [ref=e252]:
+                    - img
+                - paragraph [ref=e253]: Perform comprehensive security audit of the application.
+                - generic [ref=e254]:
+                  - generic [ref=e256]: DevOps
+                  - generic [ref=e257]:
+                    - img
+                    - text: To Do
+                  - generic [ref=e258]: High
+                - generic [ref=e259]:
+                  - img [ref=e260]
+                  - text: Overdue · Feb 22, 2026
+            - generic [ref=e263]:
+              - button "Mark incomplete" [ref=e264]:
+                - img [ref=e265]
+              - generic [ref=e268]:
+                - generic [ref=e269]:
+                  - heading "Refactor payment module" [level=3] [ref=e270]
+                  - button [ref=e271]:
+                    - img
+                - paragraph [ref=e272]: Clean up legacy code in the payment processing module.
+                - generic [ref=e273]:
+                  - generic [ref=e275]: Development
+                  - generic [ref=e276]:
+                    - img
+                    - text: Completed
+                  - generic [ref=e277]: Medium
+                - generic [ref=e278]:
+                  - img [ref=e279]
+                  - text: Due Feb 20, 2026
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e286] [cursor=pointer]:
+    - img [ref=e287]
+  - alert [ref=e290]

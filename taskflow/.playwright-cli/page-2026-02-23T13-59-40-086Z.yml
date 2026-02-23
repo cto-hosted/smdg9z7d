@@ -1,0 +1,63 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e5]:
+      - generic [ref=e6]:
+        - img [ref=e8]
+        - generic [ref=e10]: TaskFlow
+      - navigation [ref=e11]:
+        - link "Dashboard" [ref=e12] [cursor=pointer]:
+          - /url: /
+          - img [ref=e13]
+          - text: Dashboard
+        - link "Tasks" [ref=e19] [cursor=pointer]:
+          - /url: /tasks
+          - img [ref=e20]
+          - text: Tasks
+        - link "Analytics" [ref=e23] [cursor=pointer]:
+          - /url: /analytics
+          - img [ref=e24]
+          - text: Analytics
+      - generic [ref=e26]:
+        - paragraph [ref=e27]: Pro Tip
+        - paragraph [ref=e28]: Use filters to quickly find your tasks by status, priority, or category.
+    - generic [ref=e29]:
+      - banner [ref=e30]:
+        - generic [ref=e31]:
+          - heading "Dashboard" [level=1] [ref=e32]
+          - paragraph [ref=e33]: Welcome back! Here's what's happening.
+        - generic [ref=e34]:
+          - generic [ref=e37]: 33% done
+          - generic [ref=e40]: TF
+      - main [ref=e41]:
+        - generic [ref=e42]:
+          - generic [ref=e43]:
+            - generic [ref=e44]:
+              - heading "Overview" [level=2] [ref=e45]
+              - paragraph [ref=e46]: Monday, February 23, 2026
+            - button "New Task" [ref=e47]:
+              - img
+              - generic [ref=e48]: New Task
+          - generic [ref=e54]:
+            - generic [ref=e55]:
+              - generic [ref=e56]:
+                - img [ref=e57]
+                - heading "Progress Overview" [level=3] [ref=e60]
+              - generic [ref=e61]: 33%
+            - progressbar [ref=e62]
+            - generic [ref=e64]:
+              - generic [ref=e65]:
+                - generic [ref=e66]: "4"
+                - generic [ref=e67]: Completed
+              - generic [ref=e68]:
+                - generic [ref=e69]: "3"
+                - generic [ref=e70]: In Progress
+              - generic [ref=e71]:
+                - generic [ref=e72]: "5"
+                - generic [ref=e73]: To Do
+          - generic [ref=e74]:
+            - generic [ref=e76]:
+              - heading "Recent Tasks" [level=3] [ref=e77]
+              - link "View all →" [ref=e78] [cursor=pointer]:
+                - /url: /tasks
+            - heading "Upcoming Deadlines" [level=3] [ref=e85]
+  - region "Notifications alt+T"

@@ -1,0 +1,55 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e5]:
+      - generic [ref=e6]:
+        - img [ref=e8]
+        - generic [ref=e10]: TaskFlow
+      - navigation [ref=e11]:
+        - link "Dashboard" [ref=e12] [cursor=pointer]:
+          - /url: /
+          - img [ref=e13]
+          - text: Dashboard
+        - link "Tasks" [ref=e18] [cursor=pointer]:
+          - /url: /tasks
+          - img [ref=e19]
+          - text: Tasks
+        - link "Analytics" [ref=e23] [cursor=pointer]:
+          - /url: /analytics
+          - img [ref=e24]
+          - text: Analytics
+      - generic [ref=e26]:
+        - paragraph [ref=e27]: Pro Tip
+        - paragraph [ref=e28]: Use filters to quickly find your tasks by status, priority, or category.
+    - generic [ref=e29]:
+      - banner [ref=e30]:
+        - generic [ref=e31]:
+          - heading "Tasks" [level=1] [ref=e32]
+          - paragraph [ref=e33]: Manage and track all your tasks.
+        - generic [ref=e34]:
+          - generic [ref=e37]: 33% done
+          - generic [ref=e40]: TF
+      - main [ref=e41]:
+        - generic [ref=e42]:
+          - generic [ref=e43]:
+            - generic [ref=e44]:
+              - heading "All Tasks" [level=2] [ref=e45]
+              - paragraph [ref=e46]: 12 of 12 tasks
+            - button "New Task" [ref=e47]:
+              - img
+              - generic [ref=e48]: New Task
+          - generic [ref=e50]:
+            - generic [ref=e51]:
+              - img [ref=e52]
+              - textbox "Search tasks..." [ref=e55]
+            - combobox [ref=e56]:
+              - img
+            - combobox [ref=e57]
+            - combobox [ref=e58]:
+              - img
+            - combobox [ref=e59]
+            - combobox [ref=e60]:
+              - img
+            - combobox [ref=e61]
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e75] [cursor=pointer]:
+    - img [ref=e76]
