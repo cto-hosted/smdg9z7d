@@ -1,20 +1,31 @@
 'use client';
 
 import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Wand2, Sparkles, Copy, Check, RefreshCw, Zap, Instagram, Youtube, Download } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { useTrends } from '@/lib/trend-store';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Card } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { 
+  Sparkles, 
+  Copy, 
+  Check, 
+  Wand2, 
+  Zap,
+  MessageSquare,
+  Hash,
+  FileText,
+  Type,
+  RefreshCw,
+  Save
+} from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 
 type ContentType = 'hook' | 'caption' | 'hashtags' | 'script';
-type Platform = 'tiktok' | 'instagram' | 'youtube';
+type Platform = 'tiktok' | 'instagram' | 'youtube' | 'twitter';
 
 interface GeneratedContent {
   type: ContentType;
@@ -22,250 +33,298 @@ interface GeneratedContent {
   platform: Platform;
 }
 
-const contentTypes: { value: ContentType; label: string; icon: string }[] = [
-  { value: 'hook', label: 'Hook', icon: '⚡' },
-  { value: 'caption', label: 'Caption', icon: '✍️' },
-  { value: 'hashtags', label: 'Hashtags', icon: '#️⃣' },
-  { value: 'script', label: 'Script', icon: '🎬' },
+const contentTypes: { type: ContentType; label: string; icon: typeof Type }[] = [
+  { type: 'hook', label: 'Hook', icon: Zap },
+  { type: 'caption', label: 'Caption', icon: MessageSquare },
+  { type: 'hashtags', label: 'Hashtags', icon: Hash },
+  { type: 'script', label: 'Script', icon: FileText },
 ];
 
-const platformIcons: Record<Platform, React.ReactNode> = {
-  tiktok: <span className="text-xs">🎵</span>,
-  instagram: <Instagram className="h-3.5 w-3.5" />,
-  youtube: <Youtube className="h-3.5 w-3.5" />,
-};
+const platforms: { platform: Platform; label: string }[] = [
+  { platform: 'tiktok', label: 'TikTok' },
+  { platform: 'instagram', label: 'Instagram' },
+  { platform: 'youtube', label: 'YouTube' },
+  { platform: 'twitter', label: 'Twitter' },
+];
 
-const fallbackContent: Record<ContentType, string[]> = {
-  hook: [
-    "🔥 {trend} is EXPLODING in {location}! Are you ready for this?",
-    "Wait till you see what's trending in {location} right now... 🤯",
-    "POV: You just discovered {trend} before everyone else 💫",
-    "Everyone in {location} is talking about {trend} - here's why 👇",
-  ],
-  caption: [
-    "Just experienced {trend} and I'm obsessed! ✨ What's your favorite? #Trending #{location}",
-    "If you know, you know 🙌 {trend} #LocalTrend #{location}",
-    "The vibe at {trend} is unmatched 💯 #MustTry #TrendingNow",
-  ],
-  hashtags: [
-    "#{trend} #{location}Trending #Viral #{location} #{trending} #MustWatch #TrendingNow",
-    "#{trend} #{location} #LocalTrends #What'sTrending #ViralContent #Explore",
-  ],
-  script: [
-    "[INTRO - Eye-catching visual of {trend}] \nHey! Today we're talking about {trend} in {location}...\n\n[MAIN CONTENT] \nHere's why everyone's excited:\n1. It's unique\n2. Everyone's sharing it\n3. The experience is incredible\n\n[OUTRO] \nLike and follow for more {location} trends!",
-  ],
+// Simulated AI generation - in production, this would call OpenAI API
+const generateContent = async (type: ContentType, platform: Platform, topic: string): Promise<string> => {
+  await new Promise(resolve => setTimeout(resolve, 800)); // Simulate API delay
+
+  const templates: Record<ContentType, Record<Platform, string[]>> = {
+    hook: {
+      tiktok: [
+        `Wait till you see what's trending in ${topic}! 🔥`,
+        `POV: You just discovered the hottest ${topic} trend!`,
+        `This ${topic} trend is taking over - here's why!`,
+        `Everyone in ${topic} is talking about this!`,
+      ],
+      instagram: [
+        `The ${topic} trend you need to know about 🔥`,
+        `Your feed needs this ${topic} content!`,
+        `This is the ${topic} moment you've been waiting for`,
+      ],
+      youtube: [
+        `The ${topic} Trend That's Exploding Right Now!`,
+        `Why ${topic} Is The Hottest Topic Right Now`,
+        `Everything You Need To Know About ${topic}`,
+      ],
+      twitter: [
+        `The ${topic} trend is real and it's happening now`,
+        `Let me tell you about this ${topic} thing 👀`,
+      ],
+    },
+    caption: {
+      tiktok: [
+        `Living for this ${topic} trend! 🤩 Who's with me? #${topic.replace(/\s+/g, '')} #fyp #trending`,
+        `The ${topic} trend explained in 60 seconds ⏱️ #${topic.replace(/\s+/g, '')} #viral`,
+        `Not me obsessing over ${topic} again 😅 #${topic.replace(/\s+/g, '')} #trend`,
+      ],
+      instagram: [
+        `Living my best life with the ${topic} trend ✨ #${topic.replace(/\s+/g, '')} #trending #lifestyle`,
+        `The ${topic} content you didn't know you needed 💫 #${topic.replace(/\s+/g, '')} #vibes`,
+        `Embracing the ${topic} wave 🌊 #${topic.replace(/\s+/g, '')} #mood`,
+      ],
+      youtube: [
+        `In today's video, we're diving deep into the ${topic} trend. Let me show you everything you need to know!`,
+        `This ${topic} trend is everywhere! Here's my take on it...`,
+        `The complete guide to ${topic} - you need to see this!`,
+      ],
+      twitter: [
+        `The ${topic} trend is hitting different 🤔 What's your take?`,
+        `Can't stop thinking about this ${topic} thing 💭`,
+      ],
+    },
+    hashtags: {
+      tiktok: [
+        `#${topic.replace(/\s+/g, '')} #fyp #trending #viral #${topic.replace(/\s+/g, '')}trend #mustwatch`,
+        `#${topic.replace(/\s+/g, '')} #viral #trendingnow #foryou #explorepage`,
+        `#${topic.replace(/\s+/g, '')} #trend #fyp #viral #newtrend`,
+      ],
+      instagram: [
+        `#${topic.replace(/\s+/g, '')} #trending #viral #instagood #photooftheday #${topic.replace(/\s+/g, '')}`,
+        `#${topic.replace(/\s+/g, '')} #trendingnow #viral #explore #reels`,
+        `#${topic.replace(/\s+/g, '')} #instadaily #viral #trending #fashion`,
+      ],
+      youtube: [
+        `#${topic.replace(/\s+/g, '')} #trending #viral #youtube #shorts #trendingnow`,
+        `#${topic.replace(/\s+/g, '')} #youtubeshorts #viral #trending #fyp`,
+        `#${topic.replace(/\s+/g, '')} #trending #viral #video #viralvideo`,
+      ],
+      twitter: [
+        `#${topic.replace(/\s+/g, '')} #trending #viral #twitter #trendingnow #${topic.replace(/\s+/g, '')}`,
+        `#${topic.replace(/\s+/g, '')} #trending #viral #trendingnow`,
+      ],
+    },
+    script: {
+      tiktok: [
+        `[Hook - 3 seconds] Wait till you see this ${topic} trend!\n\n[Body - 45 seconds] So here's the deal with ${topic}...\n\n[CTA] Like and follow for more!`,
+        `[Intro] What's up everyone!\n\n[Main Content] Today we're talking about ${topic}...\n\n[Outro] Drop a comment below!`,
+      ],
+      instagram: [
+        `[Reel Structure]\n0-3s: Hook\n3-15s: Value\n15-30s: CTA\n\nTopic: ${topic}\n\nKey points:\n1. Why it's trending\n2. How to participate\n3. Best practices`,
+      ],
+      youtube: [
+        `[Intro - 10s]\nWelcome back! Today we're exploring ${topic}\n\n[Content - 3-5 min]\n- Background on the trend\n- Why it's gaining traction\n- How to leverage it\n\n[Outro - 20s]\nLike, Subscribe, and hit the bell!`,
+      ],
+      twitter: [
+        `[Thread about ${topic}]\n\n1/ The ${topic} trend is taking over.\n\n2/ Here's what you need to know...\n\n3/ Why it matters for you:\n   - Point 1\n   - Point 2\n   - Point 3\n\n4/ Conclusion and CTA`,
+      ],
+    },
+  };
+
+  const options = templates[type][platform];
+  return options[Math.floor(Math.random() * options.length)];
 };
 
 export function AIGenerator() {
-  const [trend, setTrend] = useState('');
-  const [location, setLocation] = useState('');
+  const { trends, addContent, selectedLocation } = useTrends();
+  const [topic, setTopic] = useState('');
   const [selectedType, setSelectedType] = useState<ContentType>('hook');
   const [selectedPlatform, setSelectedPlatform] = useState<Platform>('tiktok');
   const [isGenerating, setIsGenerating] = useState(false);
-  const [generatedContent, setGeneratedContent] = useState<GeneratedContent[]>([]);
-  const [copiedId, setCopiedId] = useState<string | null>(null);
-  const { addCreatorContent, selectedLocation } = useTrends();
+  const [generatedContent, setGeneratedContent] = useState<GeneratedContent | null>(null);
+  const [copied, setCopied] = useState(false);
 
-  const generateContent = async () => {
-    if (!trend) {
-      toast.error('Please enter a trend or topic');
+  const handleGenerate = async () => {
+    if (!topic.trim()) {
+      toast.error('Please enter a topic or trend');
       return;
     }
 
     setIsGenerating(true);
-
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-
-    const variations = fallbackContent[selectedType];
-    const randomVariation = variations[Math.floor(Math.random() * variations.length)];
-    const content = randomVariation
-      .replace(/{trend}/g, trend)
-      .replace(/{location}/g, location || selectedLocation?.name || 'your city');
-
-    const newContent: GeneratedContent = {
-      type: selectedType,
-      content,
-      platform: selectedPlatform,
-    };
-
-    setGeneratedContent((prev) => [newContent, ...prev.slice(0, 2)]);
-    setIsGenerating(false);
-
-    toast.success('Content generated successfully!');
+    try {
+      const content = await generateContent(selectedType, selectedPlatform, topic);
+      setGeneratedContent({ type: selectedType, content, platform: selectedPlatform });
+    } catch (error) {
+      toast.error('Failed to generate content');
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
-  const handleCopy = (content: string, id: string) => {
-    navigator.clipboard.writeText(content);
-    setCopiedId(id);
-    toast.success('Copied to clipboard!');
-    setTimeout(() => setCopiedId(null), 2000);
+  const handleCopy = () => {
+    if (generatedContent) {
+      navigator.clipboard.writeText(generatedContent.content);
+      setCopied(true);
+      toast.success('Copied to clipboard!');
+      setTimeout(() => setCopied(false), 2000);
+    }
   };
 
-  const handleSave = (content: GeneratedContent) => {
-    addCreatorContent({
-      trendId: 'manual',
-      type: content.type,
-      content: content.content,
-      platform: content.platform,
-    });
-    toast.success('Content saved to library!');
+  const handleSave = () => {
+    if (generatedContent) {
+      addContent({
+        type: generatedContent.type,
+        platform: generatedContent.platform,
+        content: generatedContent.content,
+        trendId: '',
+      });
+      toast.success('Content saved to library!');
+    }
   };
 
   return (
     <div className="space-y-6">
-      <Card className="bg-white/5 border-white/10">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-lg">
-            <Wand2 className="h-5 w-5 text-rose-400" />
-            AI Content Generator
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2">
-              <label className="text-sm text-muted-foreground">Trend / Topic</label>
-              <Input
-                placeholder="e.g., Street Food Festival"
-                value={trend}
-                onChange={(e) => setTrend(e.target.value)}
-                className="bg-white/5 border-white/10 focus:border-rose-500/50"
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm text-muted-foreground">Location (optional)</label>
-              <Input
-                placeholder={selectedLocation?.name || 'Berlin'}
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                className="bg-white/5 border-white/10 focus:border-rose-500/50"
-              />
-            </div>
-          </div>
+      {/* Input Section */}
+      <div className="space-y-4">
+        <div>
+          <label className="text-sm font-medium text-muted-foreground mb-2 block">
+            What trend or topic do you want content for?
+          </label>
+          <Input
+            placeholder="e.g., rooftop bars, vintage fashion, techno clubs..."
+            value={topic}
+            onChange={(e) => setTopic(e.target.value)}
+            className="h-11 bg-white/5 border-white/10 focus:border-orange-500/50"
+          />
+        </div>
 
-          <div className="space-y-2">
-            <label className="text-sm text-muted-foreground">Content Type</label>
-            <div className="flex flex-wrap gap-2">
-              {contentTypes.map((type) => (
-                <button
-                  key={type.value}
-                  onClick={() => setSelectedType(type.value)}
-                  className={cn(
-                    'flex items-center gap-2 px-4 py-2 rounded-lg text-sm transition-all',
-                    selectedType === type.value
-                      ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30'
-                      : 'bg-white/5 text-muted-foreground hover:bg-white/10'
-                  )}
-                >
-                  <span>{type.icon}</span>
-                  {type.label}
-                </button>
-              ))}
-            </div>
-          </div>
+        <div className="flex gap-2 overflow-x-auto pb-2">
+          {contentTypes.map(({ type, label, icon: Icon }) => (
+            <button
+              key={type}
+              onClick={() => setSelectedType(type)}
+              className={cn(
+                'flex-shrink-0 px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2',
+                selectedType === type
+                  ? 'bg-gradient-to-r from-orange-500 to-rose-500 text-white'
+                  : 'bg-white/5 border border-white/10 hover:bg-white/10'
+              )}
+            >
+              <Icon className="h-4 w-4" />
+              {label}
+            </button>
+          ))}
+        </div>
 
-          <div className="space-y-2">
-            <label className="text-sm text-muted-foreground">Platform</label>
-            <div className="flex gap-2">
-              {(['tiktok', 'instagram', 'youtube'] as Platform[]).map((platform) => (
-                <button
-                  key={platform}
-                  onClick={() => setSelectedPlatform(platform)}
-                  className={cn(
-                    'flex items-center gap-2 px-4 py-2 rounded-lg text-sm transition-all capitalize',
-                    selectedPlatform === platform
-                      ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30'
-                      : 'bg-white/5 text-muted-foreground hover:bg-white/10'
-                  )}
-                >
-                  {platformIcons[platform]}
-                  {platform}
-                </button>
-              ))}
-            </div>
-          </div>
+        <div className="flex gap-2">
+          {platforms.map(({ platform, label }) => (
+            <button
+              key={platform}
+              onClick={() => setSelectedPlatform(platform)}
+              className={cn(
+                'flex-1 px-3 py-2 rounded-lg text-xs font-medium transition-all',
+                selectedPlatform === platform
+                  ? 'bg-white/10 border border-orange-500/50 text-orange-400'
+                  : 'bg-white/5 border border-white/10 text-muted-foreground hover:text-foreground'
+              )}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
 
-          <Button
-            onClick={generateContent}
-            disabled={isGenerating || !trend}
-            className="w-full bg-gradient-to-r from-rose-500 via-orange-500 to-amber-500 hover:from-rose-600 hover:via-orange-600 hover:to-amber-600 border-0 gap-2"
-          >
-            {isGenerating ? (
-              <>
-                <RefreshCw className="h-4 w-4 animate-spin" />
-                Generating...
-              </>
-            ) : (
-              <>
-                <Sparkles className="h-4 w-4" />
-                Generate Content
-              </>
-            )}
-          </Button>
-        </CardContent>
-      </Card>
+        <Button
+          onClick={handleGenerate}
+          disabled={isGenerating}
+          className="w-full h-11 bg-gradient-to-r from-orange-500 to-rose-500 hover:from-orange-600 hover:to-rose-600 text-white border-0"
+        >
+          {isGenerating ? (
+            <>
+              <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+              Generating...
+            </>
+          ) : (
+            <>
+              <Wand2 className="h-4 w-4 mr-2" />
+              Generate with AI
+            </>
+          )}
+        </Button>
+      </div>
 
-      <AnimatePresence>
-        {generatedContent.length > 0 && (
+      {/* Results */}
+      <AnimatePresence mode="wait">
+        {generatedContent && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
             className="space-y-4"
           >
-            <h3 className="text-sm font-semibold text-muted-foreground flex items-center gap-2">
-              <Zap className="h-4 w-4 text-amber-400" />
-              Generated Content
-            </h3>
-            
-            {generatedContent.map((item, i) => (
-              <motion.div
-                key={`${item.type}-${i}`}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: i * 0.1 }}
+            <div className="flex items-center gap-2">
+              <Sparkles className="h-4 w-4 text-orange-400" />
+              <span className="text-sm font-medium">Generated Content</span>
+              <Badge variant="secondary" className="ml-auto text-xs">
+                {selectedPlatform}
+              </Badge>
+            </div>
+
+            <Card className="bg-white/5 border-white/10 p-4">
+              <p className="text-sm whitespace-pre-wrap">{generatedContent.content}</p>
+            </Card>
+
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleCopy}
+                className="flex-1 border-white/10 hover:bg-white/10"
               >
-                <Card className="bg-white/5 border-white/10 hover:border-rose-500/30 transition-colors">
-                  <CardContent className="p-4">
-                    <div className="flex items-start justify-between gap-3 mb-2">
-                      <div className="flex items-center gap-2">
-                        <Badge variant="secondary" className="bg-rose-500/20 text-rose-400">
-                          {platformIcons[item.platform]}
-                          <span className="ml-1 capitalize">{item.platform}</span>
-                        </Badge>
-                        <Badge variant="outline" className="border-white/20 text-muted-foreground capitalize">
-                          {item.type}
-                        </Badge>
-                      </div>
-                      <div className="flex gap-1">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8"
-                          onClick={() => handleCopy(item.content, `${i}`)}
-                        >
-                          {copiedId === `${i}` ? (
-                            <Check className="h-4 w-4 text-emerald-400" />
-                          ) : (
-                            <Copy className="h-4 w-4" />
-                          )}
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8"
-                          onClick={() => handleSave(item)}
-                        >
-                          <Download className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </div>
-                    <p className="text-sm whitespace-pre-wrap">{item.content}</p>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
+                {copied ? (
+                  <>
+                    <Check className="h-4 w-4 mr-2 text-emerald-400" />
+                    Copied!
+                  </>
+                ) : (
+                  <>
+                    <Copy className="h-4 w-4 mr-2" />
+                    Copy
+                  </>
+                )}
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleSave}
+                className="flex-1 border-white/10 hover:bg-white/10"
+              >
+                <Save className="h-4 w-4 mr-2" />
+                Save
+              </Button>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Quick Suggestions */}
+      {!generatedContent && trends.length > 0 && (
+        <div className="space-y-3">
+          <p className="text-xs text-muted-foreground">Quick suggestions from trending:</p>
+          <div className="flex flex-wrap gap-2">
+            {trends.slice(0, 5).map((trend) => (
+              <button
+                key={trend.id}
+                onClick={() => setTopic(trend.name.replace(` in ${selectedLocation?.city || ''}`, ''))}
+                className="text-xs px-2.5 py-1 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
+              >
+                {trend.name.split(' in ')[0]}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

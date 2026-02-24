@@ -1,12 +1,14 @@
 export type TrendCategory = 
   | 'food' 
-  | 'events' 
-  | 'music' 
   | 'fashion' 
-  | 'tech' 
-  | 'sports' 
+  | 'music' 
+  | 'events' 
   | 'nightlife' 
-  | 'lifestyle';
+  | 'sports' 
+  | 'tech' 
+  | 'travel'
+  | 'wellness'
+  | 'art';
 
 export type TrendLevel = 'low' | 'rising' | 'viral' | 'explosive';
 
@@ -15,6 +17,7 @@ export type UserMode = 'creator' | 'business';
 export interface Location {
   id: string;
   name: string;
+  city: string;
   country: string;
   coordinates?: {
     lat: number;
@@ -22,77 +25,58 @@ export interface Location {
   };
 }
 
+export interface TrendScore {
+  raw: number;
+  normalized: number;
+  level: TrendLevel;
+  mentions: number;
+  growthRate: number;
+  timeDecay: number;
+}
+
 export interface Trend {
   id: string;
   name: string;
   category: TrendCategory;
   location: Location;
-  mentions: number;
-  growthRate: number;
-  timeDecay: number;
-  score: number;
-  level: TrendLevel;
+  score: TrendScore;
+  description: string;
   keywords: string[];
-  relatedTrends?: string[];
-  peakHours?: number[];
+  peakHours: number[];
+  relatedTrends: string[];
   createdAt: string;
   updatedAt: string;
 }
 
-export interface TrendFilters {
-  search: string;
-  category: TrendCategory | 'all';
-  level: TrendLevel | 'all';
-  sortBy: 'score' | 'mentions' | 'growth' | 'recent';
-}
-
-export interface TrendStats {
-  totalTrends: number;
-  viralTrends: number;
-  risingTrends: number;
-  avgScore: number;
-}
-
 export interface CreatorContent {
   id: string;
-  trendId: string;
   type: 'hook' | 'caption' | 'hashtags' | 'script';
+  platform: 'tiktok' | 'instagram' | 'youtube' | 'twitter';
   content: string;
-  platform: 'tiktok' | 'instagram' | 'youtube';
+  trendId: string;
   createdAt: string;
 }
 
 export interface BusinessInsight {
-  id: string;
   trendId: string;
-  locationId: string;
-  peakTimes: PeakTimeData[];
-  competitorTrends: TrendComparison[];
+  comparisonData: {
+    name: string;
+    score: number;
+    growthRate: number;
+  }[];
+  peakTimes: {
+    day: string;
+    hour: number;
+    value: number;
+  }[];
   recommendations: string[];
-  generatedAt: string;
 }
 
-export interface PeakTimeData {
-  day: string;
-  hour: number;
-  value: number;
-}
-
-export interface TrendComparison {
-  trendId: string;
-  trendName: string;
-  score: number;
-  growthRate: number;
-}
-
-export interface AIContentRequest {
-  trend: string;
-  type: 'hook' | 'caption' | 'hashtags' | 'script';
-  platform: 'tiktok' | 'instagram' | 'youtube';
-  tone?: 'fun' | 'professional' | 'casual' | 'exciting';
-}
-
-export interface AIContentResponse {
-  content: string;
-  quality: number;
+export interface UserPreferences {
+  selectedLocation: Location | null;
+  userMode: UserMode;
+  selectedCategory: TrendCategory | 'all';
+  recentSearches: Location[];
+  savedTrends: string[];
+  savedContent: CreatorContent[];
 }

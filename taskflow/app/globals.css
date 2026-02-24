@@ -55,7 +55,7 @@
   --card-foreground: oklch(0.15 0.02 265);
   --popover: oklch(1 0 0 / 95%);
   --popover-foreground: oklch(0.15 0.02 265);
-  --primary: oklch(0.5 0.22 275);
+  --primary: oklch(0.6 0.22 25);
   --primary-foreground: oklch(0.98 0 0);
   --secondary: oklch(0.95 0.01 265);
   --secondary-foreground: oklch(0.3 0.05 265);
@@ -66,54 +66,54 @@
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.9 0.01 265);
   --input: oklch(0.9 0.01 265);
-  --ring: oklch(0.5 0.22 275);
-  --chart-1: oklch(0.55 0.22 275);
-  --chart-2: oklch(0.6 0.18 240);
+  --ring: oklch(0.6 0.22 25);
+  --chart-1: oklch(0.6 0.22 25);
+  --chart-2: oklch(0.65 0.18 40);
   --chart-3: oklch(0.55 0.18 160);
   --chart-4: oklch(0.75 0.18 85);
   --chart-5: oklch(0.65 0.22 25);
   --sidebar: oklch(1 0 0 / 60%);
   --sidebar-foreground: oklch(0.15 0.02 265);
-  --sidebar-primary: oklch(0.5 0.22 275);
+  --sidebar-primary: oklch(0.6 0.22 25);
   --sidebar-primary-foreground: oklch(0.98 0 0);
   --sidebar-accent: oklch(0.94 0.01 265);
   --sidebar-accent-foreground: oklch(0.3 0.05 265);
   --sidebar-border: oklch(0.9 0.01 265 / 50%);
-  --sidebar-ring: oklch(0.5 0.22 275);
+  --sidebar-ring: oklch(0.6 0.22 25);
 }
 
 .dark {
-  --background: oklch(0.08 0.02 270);
+  --background: oklch(0.12 0.02 270);
   --foreground: oklch(0.95 0.01 265);
-  --card: oklch(0.14 0.02 270 / 80%);
+  --card: oklch(0.18 0.025 270 / 80%);
   --card-foreground: oklch(0.95 0.01 265);
-  --popover: oklch(0.12 0.02 270 / 95%);
+  --popover: oklch(0.16 0.025 270 / 95%);
   --popover-foreground: oklch(0.95 0.01 265);
-  --primary: oklch(0.65 0.22 275);
+  --primary: oklch(0.65 0.22 25);
   --primary-foreground: oklch(0.1 0.02 270);
-  --secondary: oklch(0.18 0.03 270);
+  --secondary: oklch(0.22 0.03 270);
   --secondary-foreground: oklch(0.95 0.01 265);
-  --muted: oklch(0.18 0.02 270);
+  --muted: oklch(0.22 0.02 270);
   --muted-foreground: oklch(0.62 0.03 265);
-  --accent: oklch(0.18 0.03 270);
+  --accent: oklch(0.22 0.03 270);
   --accent-foreground: oklch(0.95 0.01 265);
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 8%);
   --input: oklch(1 0 0 / 12%);
-  --ring: oklch(0.65 0.22 275);
-  --chart-1: oklch(0.6 0.22 275);
-  --chart-2: oklch(0.65 0.18 200);
+  --ring: oklch(0.65 0.22 25);
+  --chart-1: oklch(0.65 0.22 25);
+  --chart-2: oklch(0.65 0.18 40);
   --chart-3: oklch(0.65 0.18 160);
   --chart-4: oklch(0.75 0.18 85);
   --chart-5: oklch(0.65 0.22 25);
-  --sidebar: oklch(0.12 0.02 270 / 80%);
+  --sidebar: oklch(0.16 0.025 270 / 80%);
   --sidebar-foreground: oklch(0.95 0.01 265);
-  --sidebar-primary: oklch(0.6 0.22 275);
+  --sidebar-primary: oklch(0.65 0.22 25);
   --sidebar-primary-foreground: oklch(0.95 0.01 265);
-  --sidebar-accent: oklch(0.18 0.03 270);
+  --sidebar-accent: oklch(0.22 0.03 270);
   --sidebar-accent-foreground: oklch(0.95 0.01 265);
   --sidebar-border: oklch(1 0 0 / 8%);
-  --sidebar-ring: oklch(0.65 0.22 275);
+  --sidebar-ring: oklch(0.65 0.22 25);
 }
 
 @layer base {
@@ -150,21 +150,21 @@
 
   .bg-gradient-mesh {
     background-image:
-      radial-gradient(ellipse at 20% 50%, rgba(244, 63, 94, 0.08) 0%, transparent 50%),
-      radial-gradient(ellipse at 80% 20%, rgba(249, 115, 22, 0.08) 0%, transparent 50%),
-      radial-gradient(ellipse at 60% 80%, rgba(245, 158, 11, 0.06) 0%, transparent 50%);
+      radial-gradient(ellipse at 20% 50%, rgba(249, 115, 22, 0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 20%, rgba(244, 63, 94, 0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 60% 80%, rgba(251, 146, 60, 0.06) 0%, transparent 50%);
   }
 
   .dark .bg-gradient-mesh {
     background-image:
-      radial-gradient(ellipse at 20% 50%, rgba(244, 63, 94, 0.15) 0%, transparent 50%),
-      radial-gradient(ellipse at 80% 20%, rgba(249, 115, 22, 0.12) 0%, transparent 50%),
-      radial-gradient(ellipse at 60% 80%, rgba(245, 158, 11, 0.1) 0%, transparent 50%);
+      radial-gradient(ellipse at 20% 50%, rgba(249, 115, 22, 0.15) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 20%, rgba(244, 63, 94, 0.12) 0%, transparent 50%),
+      radial-gradient(ellipse at 60% 80%, rgba(251, 146, 60, 0.1) 0%, transparent 50%);
   }
 
   .scrollbar-thin {
     scrollbar-width: thin;
-    scrollbar-color: rgba(244, 63, 94, 0.3) transparent;
+    scrollbar-color: rgba(249, 115, 22, 0.3) transparent;
   }
 
   .scrollbar-thin::-webkit-scrollbar {
@@ -176,14 +176,7 @@
   }
 
   .scrollbar-thin::-webkit-scrollbar-thumb {
-    background: rgba(244, 63, 94, 0.3);
+    background: rgba(249, 115, 22, 0.3);
     border-radius: 2px;
-  }
-
-  .line-clamp-3 {
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
   }
 }

@@ -1,196 +1,199 @@
 'use client';
 
-import React, { createContext, useContext, useCallback } from 'react';
-import { Trend, TrendFilters, TrendStats, Location, UserMode, CreatorContent, BusinessInsight, TrendCategory, TrendLevel } from './types';
+import React, { createContext, useContext, useCallback, useMemo } from 'react';
 import { useLocalStorage } from '@/hooks/use-local-storage';
-import { sampleTrends, sampleCreatorContent, sampleBusinessInsights, sampleLocations } from './mock-data';
-import { calculateTrendScore, getTrendLevel } from './trend-algorithm';
+import { 
+  Trend, 
+  Location, 
+  UserMode, 
+  CreatorContent, 
+  TrendCategory,
+  UserPreferences 
+} from './types';
+import { 
+  sampleTrends, 
+  sampleLocations, 
+  sampleCreatorContent,
+  getTrendsByLocation,
+  getTopTrends,
+  getTrendsByCategory 
+} from './mock-data';
 
 interface TrendContextValue {
+  // Trends
   trends: Trend[];
-  filters: TrendFilters;
+  filteredTrends: Trend[];
+  topTrends: Trend[];
+  
+  // Location
   selectedLocation: Location | null;
-  userMode: UserMode;
-  creatorContent: CreatorContent[];
-  businessInsights: BusinessInsight[];
-  locations: Location[];
-  recentSearches: string[];
-  isLoaded: boolean;
-  setFilters: (filters: TrendFilters) => void;
   setSelectedLocation: (location: Location | null) => void;
+  locations: Location[];
+  
+  // User Mode
+  userMode: UserMode;
   setUserMode: (mode: UserMode) => void;
-  addCreatorContent: (content: Omit<CreatorContent, 'id' | 'createdAt'>) => void;
-  deleteCreatorContent: (id: string) => void;
-  addRecentSearch: (search: string) => void;
-  getFilteredTrends: () => Trend[];
-  getTrendStats: () => TrendStats;
-  getTrendById: (id: string) => Trend | undefined;
-  getBusinessInsight: (trendId: string) => BusinessInsight | undefined;
-  getTrendsByCategory: (category: TrendCategory) => Trend[];
-  getTrendsByLevel: (level: TrendLevel) => Trend[];
+  
+  // Categories
+  selectedCategory: TrendCategory | 'all';
+  setSelectedCategory: (category: TrendCategory | 'all') => void;
+  
+  // Creator Content
+  savedContent: CreatorContent[];
+  addContent: (content: Omit<CreatorContent, 'id' | 'createdAt'>) => void;
+  deleteContent: (id: string) => void;
+  
+  // Saved Trends
+  savedTrendIds: string[];
+  toggleSaveTrend: (trendId: string) => void;
+  isTrendSaved: (trendId: string) => boolean;
+  
+  // Recent Searches
+  recentSearches: Location[];
+  addRecentSearch: (location: Location) => void;
+  
+  // Search
+  searchQuery: string;
+  setSearchQuery: (query: string) => void;
+  
+  // Loading state
+  isLoaded: boolean;
 }
 
 const TrendContext = createContext<TrendContextValue | null>(null);
 
-const DEFAULT_FILTERS: TrendFilters = {
-  search: '',
-  category: 'all',
-  level: 'all',
-  sortBy: 'score',
+const DEFAULT_PREFERENCES: UserPreferences = {
+  selectedLocation: sampleLocations[0],
+  userMode: 'creator',
+  selectedCategory: 'all',
+  recentSearches: [],
+  savedTrends: [],
+  savedContent: [],
 };
 
-const DEFAULT_LOCATION: Location = sampleLocations[0];
-
 export function TrendProvider({ children }: { children: React.ReactNode }) {
-  const [trends, setTrends] = useLocalStorage<Trend[]>('localtrend-trends', sampleTrends);
-  const [filters, setFilters] = useLocalStorage<TrendFilters>('localtrend-filters', DEFAULT_FILTERS);
-  const [selectedLocation, setSelectedLocation] = useLocalStorage<Location | null>('localtrend-location', DEFAULT_LOCATION);
-  const [userMode, setUserMode] = useLocalStorage<UserMode>('localtrend-mode', 'creator');
-  const [creatorContent, setCreatorContent] = useLocalStorage<CreatorContent[]>('localtrend-content', sampleCreatorContent);
-  const [businessInsights, setBusinessInsights] = useLocalStorage<BusinessInsight[]>('localtrend-insights', sampleBusinessInsights);
-  const [recentSearches, setRecentSearches] = useLocalStorage<string[]>('localtrend-recent', []);
-  const [isLoaded, setIsLoaded] = React.useState(false);
-
-  React.useEffect(() => {
-    setIsLoaded(true);
-  }, []);
-
-  const addCreatorContent = useCallback(
-    (contentData: Omit<CreatorContent, 'id' | 'createdAt'>) => {
-      const newContent: CreatorContent = {
-        ...contentData,
-        id: crypto.randomUUID(),
-        createdAt: new Date().toISOString(),
-      };
-      setCreatorContent((prev) => [newContent, ...prev]);
-    },
-    [setCreatorContent]
+  const [preferences, setPreferences] = useLocalStorage<UserPreferences>(
+    'localtrend-preferences',
+    DEFAULT_PREFERENCES
   );
+  
+  const [searchQuery, setSearchQuery] = React.useState('');
 
-  const deleteCreatorContent = useCallback(
-    (id: string) => {
-      setCreatorContent((prev) => prev.filter((content) => content.id !== id));
-    },
-    [setCreatorContent]
-  );
-
-  const addRecentSearch = useCallback(
-    (search: string) => {
-      setRecentSearches((prev) => {
-        const filtered = prev.filter((s) => s !== search);
-        return [search, ...filtered].slice(0, 5);
-      });
-    },
-    [setRecentSearches]
-  );
-
-  const getFilteredTrends = useCallback((): Trend[] => {
-    let filtered = trends.filter((trend) => {
-      if (selectedLocation && trend.location.id !== selectedLocation.id) {
-        return false;
-      }
-      
-      if (filters.search) {
-        const query = filters.search.toLowerCase();
-        if (
-          !trend.name.toLowerCase().includes(query) &&
-          !trend.keywords.some((k) => k.toLowerCase().includes(query))
-        ) {
-          return false;
-        }
-      }
-
-      if (filters.category !== 'all' && trend.category !== filters.category) return false;
-      if (filters.level !== 'all' && trend.level !== filters.level) return false;
-      return true;
-    });
-
-    switch (filters.sortBy) {
-      case 'score':
-        filtered.sort((a, b) => b.score - a.score);
-        break;
-      case 'mentions':
-        filtered.sort((a, b) => b.mentions - a.mentions);
-        break;
-      case 'growth':
-        filtered.sort((a, b) => b.growthRate - a.growthRate);
-        break;
-      case 'recent':
-        filtered.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
-        break;
+  const locations = useMemo(() => sampleLocations, []);
+  
+  const trends = useMemo(() => {
+    if (!preferences.selectedLocation) return [];
+    return getTrendsByLocation(preferences.selectedLocation.id);
+  }, [preferences.selectedLocation]);
+  
+  const filteredTrends = useMemo(() => {
+    let filtered = trends;
+    
+    // Filter by category
+    if (preferences.selectedCategory && preferences.selectedCategory !== 'all') {
+      filtered = filtered.filter(t => t.category === preferences.selectedCategory);
     }
+    
+    // Filter by search query
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(t => 
+        t.name.toLowerCase().includes(query) ||
+        t.keywords.some(k => k.toLowerCase().includes(query)) ||
+        t.category.toLowerCase().includes(query)
+      );
+    }
+    
+    // Sort by score
+    return filtered.sort((a, b) => b.score.normalized - a.score.normalized);
+  }, [trends, preferences.selectedCategory, searchQuery]);
+  
+  const topTrends = useMemo(() => {
+    if (!preferences.selectedLocation) return [];
+    return getTopTrends(preferences.selectedLocation.id, 10);
+  }, [preferences.selectedLocation]);
 
-    return filtered;
-  }, [trends, filters, selectedLocation]);
+  const setSelectedLocation = useCallback((location: Location | null) => {
+    setPreferences(prev => ({ ...prev, selectedLocation: location }));
+  }, [setPreferences]);
 
-  const getTrendStats = useCallback((): TrendStats => {
-    const filteredTrends = getFilteredTrends();
-    const viralTrends = filteredTrends.filter((t) => t.level === 'viral' || t.level === 'explosive').length;
-    const risingTrends = filteredTrends.filter((t) => t.level === 'rising').length;
-    const avgScore = filteredTrends.length > 0
-      ? Math.round(filteredTrends.reduce((sum, t) => sum + t.score, 0) / filteredTrends.length)
-      : 0;
+  const setUserMode = useCallback((mode: UserMode) => {
+    setPreferences(prev => ({ ...prev, userMode: mode }));
+  }, [setPreferences]);
 
-    return {
-      totalTrends: filteredTrends.length,
-      viralTrends,
-      risingTrends,
-      avgScore,
+  const setSelectedCategory = useCallback((category: TrendCategory | 'all') => {
+    setPreferences(prev => ({ ...prev, selectedCategory: category }));
+  }, [setPreferences]);
+
+  const addRecentSearch = useCallback((location: Location) => {
+    setPreferences(prev => {
+      const filtered = prev.recentSearches.filter(l => l.id !== location.id);
+      return {
+        ...prev,
+        recentSearches: [location, ...filtered].slice(0, 5)
+      };
+    });
+  }, [setPreferences]);
+
+  const addContent = useCallback((content: Omit<CreatorContent, 'id' | 'createdAt'>) => {
+    const newContent: CreatorContent = {
+      ...content,
+      id: crypto.randomUUID(),
+      createdAt: new Date().toISOString(),
     };
-  }, [getFilteredTrends]);
+    setPreferences(prev => ({
+      ...prev,
+      savedContent: [newContent, ...prev.savedContent],
+    }));
+  }, [setPreferences]);
 
-  const getTrendById = useCallback(
-    (id: string): Trend | undefined => {
-      return trends.find((trend) => trend.id === id);
-    },
-    [trends]
-  );
+  const deleteContent = useCallback((id: string) => {
+    setPreferences(prev => ({
+      ...prev,
+      savedContent: prev.savedContent.filter(c => c.id !== id),
+    }));
+  }, [setPreferences]);
 
-  const getBusinessInsight = useCallback(
-    (trendId: string): BusinessInsight | undefined => {
-      return businessInsights.find((insight) => insight.trendId === trendId);
-    },
-    [businessInsights]
-  );
+  const toggleSaveTrend = useCallback((trendId: string) => {
+    setPreferences(prev => {
+      const isSaved = prev.savedTrends.includes(trendId);
+      return {
+        ...prev,
+        savedTrends: isSaved 
+          ? prev.savedTrends.filter(id => id !== trendId)
+          : [...prev.savedTrends, trendId],
+      };
+    });
+  }, [setPreferences]);
 
-  const getTrendsByCategory = useCallback(
-    (category: TrendCategory): Trend[] => {
-      return trends.filter((trend) => trend.category === category && trend.location.id === selectedLocation?.id);
-    },
-    [trends, selectedLocation]
-  );
-
-  const getTrendsByLevel = useCallback(
-    (level: TrendLevel): Trend[] => {
-      return trends.filter((trend) => trend.level === level && trend.location.id === selectedLocation?.id);
-    },
-    [trends, selectedLocation]
-  );
+  const isTrendSaved = useCallback((trendId: string) => {
+    return preferences.savedTrends.includes(trendId);
+  }, [preferences.savedTrends]);
 
   return (
     <TrendContext.Provider
       value={{
         trends,
-        filters,
-        selectedLocation,
-        userMode,
-        creatorContent,
-        businessInsights,
-        locations: sampleLocations,
-        recentSearches,
-        isLoaded,
-        setFilters,
+        filteredTrends,
+        topTrends,
+        selectedLocation: preferences.selectedLocation,
         setSelectedLocation,
+        locations,
+        userMode: preferences.userMode,
         setUserMode,
-        addCreatorContent,
-        deleteCreatorContent,
+        selectedCategory: preferences.selectedCategory || 'all',
+        setSelectedCategory,
+        savedContent: preferences.savedContent,
+        addContent,
+        deleteContent,
+        savedTrendIds: preferences.savedTrends,
+        toggleSaveTrend,
+        isTrendSaved,
+        recentSearches: preferences.recentSearches,
         addRecentSearch,
-        getFilteredTrends,
-        getTrendStats,
-        getTrendById,
-        getBusinessInsight,
-        getTrendsByCategory,
-        getTrendsByLevel,
+        searchQuery,
+        setSearchQuery,
+        isLoaded: true,
       }}
     >
       {children}

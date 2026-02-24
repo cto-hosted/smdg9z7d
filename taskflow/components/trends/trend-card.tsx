@@ -1,158 +1,160 @@
 'use client';
 
 import { Trend } from '@/lib/types';
-import { TrendLevel } from '@/lib/types';
-import { Card, CardContent } from '@/components/ui/card';
+import { getTrendLevelColor, getTrendLevelBgColor, getCategoryEmoji } from '@/lib/trend-algorithm';
+import { useTrends } from '@/lib/trend-store';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { TrendingUp, TrendingDown, Minus, Share2, MapPin, Clock } from 'lucide-react';
-import { cn, getTrendLevelColor, getTrendLevelBgColor } from '@/lib/utils';
+import { 
+  TrendingUp, 
+  TrendingDown, 
+  Bookmark, 
+  BookmarkCheck, 
+  Share2, 
+  MoreHorizontal,
+  Clock
+} from 'lucide-react';
 import { motion } from 'framer-motion';
+import { cn } from '@/lib/utils';
+import { useState } from 'react';
 
 interface TrendCardProps {
   trend: Trend;
-  delay?: number;
-  onClick?: () => void;
+  index?: number;
 }
 
-export function TrendCard({ trend, delay = 0, onClick }: TrendCardProps) {
-  const levelColors: Record<TrendLevel, string> = {
-    low: 'from-slate-500 to-slate-600',
-    rising: 'from-amber-500 to-orange-500',
-    viral: 'from-orange-500 to-rose-500',
-    explosive: 'from-rose-500 via-red-500 to-pink-500',
-  };
+export function TrendCard({ trend, index = 0 }: TrendCardProps) {
+  const { toggleSaveTrend, isTrendSaved, userMode } = useTrends();
+  const [showMenu, setShowMenu] = useState(false);
+  const isSaved = isTrendSaved(trend.id);
 
-  const levelGlow: Record<TrendLevel, string> = {
-    low: '',
-    rising: 'shadow-amber-500/20',
-    viral: 'shadow-orange-500/20',
-    explosive: 'shadow-rose-500/30',
+  const formatNumber = (num: number) => {
+    if (num >= 1000) {
+      return (num / 1000).toFixed(1) + 'K';
+    }
+    return num.toString();
   };
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay, duration: 0.3 }}
+      transition={{ delay: index * 0.05 }}
+      className={cn(
+        'group relative glass-card rounded-xl border p-4 hover:border-orange-500/30 transition-all duration-300',
+        getTrendLevelBgColor(trend.score.level)
+      )}
     >
-      <Card 
-        className={cn(
-          'group relative overflow-hidden cursor-pointer transition-all duration-300 hover:scale-[1.02]',
-          'bg-white/5 border-white/10 hover:border-rose-500/30',
-          'hover:shadow-lg hover:shadow-rose-500/10'
-        )}
-        onClick={onClick}
-      >
+      <div className="flex items-start gap-3">
+        {/* Trend Level Indicator */}
         <div className={cn(
-          'absolute top-0 left-0 right-0 h-1 bg-gradient-to-r',
-          levelColors[trend.level],
-          levelGlow[trend.level] ? `shadow-lg ${levelGlow[trend.level]}` : ''
-        )} />
-        
-        <CardContent className="p-4">
-          <div className="flex items-start justify-between gap-3">
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-1">
-                <Badge 
-                  variant="secondary" 
-                  className={cn(
-                    'text-[10px] font-semibold uppercase tracking-wider',
-                    getTrendLevelBgColor(trend.level),
-                    getTrendLevelColor(trend.level)
-                  )}
-                >
-                  {trend.level}
-                </Badge>
-                <span className="text-xs text-muted-foreground capitalize">
-                  {trend.category}
-                </span>
-              </div>
-              
-              <h3 className="font-semibold text-sm truncate mb-1 group-hover:text-rose-400 transition-colors">
+          'flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center text-2xl',
+          getTrendLevelBgColor(trend.score.level)
+        )}>
+          {getCategoryEmoji(trend.category)}
+        </div>
+
+        {/* Content */}
+        <div className="flex-1 min-w-0">
+          <div className="flex items-start justify-between gap-2">
+            <div>
+              <h3 className="font-semibold text-sm truncate group-hover:text-orange-400 transition-colors">
                 {trend.name}
               </h3>
-              
-              <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                <MapPin className="h-3 w-3" />
-                {trend.location.name}
-              </div>
-            </div>
-
-            <div className="flex flex-col items-end gap-1">
-              <div className={cn(
-                'text-2xl font-bold bg-gradient-to-br bg-clip-text text-transparent',
-                levelColors[trend.level]
-              )}>
-                {trend.score}
-              </div>
-              
-              <div className="flex items-center gap-1 text-xs">
-                {trend.growthRate > 0 ? (
-                  <>
-                    <TrendingUp className="h-3 w-3 text-emerald-400" />
-                    <span className="text-emerald-400">+{trend.growthRate}%</span>
-                  </>
-                ) : trend.growthRate < 0 ? (
-                  <>
-                    <TrendingDown className="h-3 w-3 text-rose-400" />
-                    <span className="text-rose-400">{trend.growthRate}%</span>
-                  </>
-                ) : (
-                  <>
-                    <Minus className="h-3 w-3 text-muted-foreground" />
-                    <span className="text-muted-foreground">0%</span>
-                  </>
-                )}
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-3 pt-3 border-t border-white/5 flex items-center justify-between">
-            <div className="flex items-center gap-3 text-xs text-muted-foreground">
-              <span className="flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-rose-400" />
-                {trend.mentions.toLocaleString()} mentions
-              </span>
-            </div>
-            
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity"
-              onClick={(e) => {
-                e.stopPropagation();
-                if (navigator.share) {
-                  navigator.share({
-                    title: `${trend.name} - Trending in ${trend.location.name}`,
-                    text: `Check out this trending topic: ${trend.name} (Score: ${trend.score})`,
-                  });
-                }
-              }}
-            >
-              <Share2 className="h-3.5 w-3.5" />
-            </Button>
-          </div>
-
-          {trend.keywords && trend.keywords.length > 0 && (
-            <div className="mt-2 flex flex-wrap gap-1">
-              {trend.keywords.slice(0, 3).map((keyword) => (
-                <span
-                  key={keyword}
-                  className="text-[10px] px-1.5 py-0.5 bg-white/5 rounded-full text-muted-foreground"
+              <div className="flex items-center gap-2 mt-1">
+                <Badge 
+                  variant="secondary" 
+                  className="text-[10px] px-1.5 py-0 h-5 bg-white/5 border-white/10"
                 >
-                  #{keyword}
-                </span>
-              ))}
-              {trend.keywords.length > 3 && (
-                <span className="text-[10px] text-muted-foreground">
-                  +{trend.keywords.length - 3}
-                </span>
-              )}
+                  {trend.category}
+                </Badge>
+                <Badge 
+                  variant="outline" 
+                  className={cn(
+                    'text-[10px] px-1.5 py-0 h-5 border',
+                    getTrendLevelColor(trend.score.level),
+                    'border-current/20'
+                  )}
+                >
+                  {trend.score.level.toUpperCase()}
+                </Badge>
+              </div>
             </div>
-          )}
-        </CardContent>
-      </Card>
+
+            {/* Score */}
+            <div className="text-right">
+              <div className={cn(
+                'text-2xl font-bold',
+                getTrendLevelColor(trend.score.level)
+              )}>
+                {trend.score.normalized}
+              </div>
+              <div className="text-[10px] text-muted-foreground">Trend Score</div>
+            </div>
+          </div>
+
+          {/* Stats */}
+          <div className="flex items-center gap-4 mt-3 text-xs text-muted-foreground">
+            <div className="flex items-center gap-1">
+              <TrendingUp className="h-3 w-3 text-emerald-400" />
+              <span className="text-emerald-400 font-medium">+{trend.score.growthRate}%</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <span className="font-medium">{formatNumber(trend.score.mentions)}</span>
+              <span>mentions</span>
+            </div>
+            {trend.peakHours.length > 0 && (
+              <div className="flex items-center gap-1">
+                <Clock className="h-3 w-3" />
+                <span>{trend.peakHours[0]}:00 - {trend.peakHours[trend.peakHours.length - 1] + 1}:00</span>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Actions */}
+        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 hover:bg-white/10"
+            onClick={() => toggleSaveTrend(trend.id)}
+          >
+            {isSaved ? (
+              <BookmarkCheck className="h-4 w-4 text-orange-400" />
+            ) : (
+              <Bookmark className="h-4 w-4" />
+            )}
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 hover:bg-white/10"
+            onClick={() => {
+              if (navigator.share) {
+                navigator.share({
+                  title: trend.name,
+                  text: `Check out this trending topic: ${trend.name}`,
+                });
+              }
+            }}
+          >
+            <Share2 className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+
+      {/* Keywords */}
+      <div className="flex flex-wrap gap-1.5 mt-3">
+        {trend.keywords.slice(0, 3).map((keyword) => (
+          <span
+            key={keyword}
+            className="text-[10px] px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-muted-foreground"
+          >
+            #{keyword}
+          </span>
+        ))}
+      </div>
     </motion.div>
   );
 }

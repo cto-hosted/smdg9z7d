@@ -1,255 +1,202 @@
 'use client';
 
-import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { BarChart3, TrendingUp, Users, Clock, Target, Lightbulb, ArrowUp, ArrowDown, Minus } from 'lucide-react';
-import { motion } from 'framer-motion';
 import { useTrends } from '@/lib/trend-store';
+import { Card } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { 
+  BarChart3, 
+  TrendingUp, 
+  Clock, 
+  Target,
+  Users,
+  Activity,
+  ArrowUpRight,
+  ArrowDownRight
+} from 'lucide-react';
+import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  LineChart,
-  Line,
-  AreaChart,
-  Area,
-} from 'recharts';
+import { getTrendLevelColor, getCategoryEmoji } from '@/lib/trend-algorithm';
 
-interface BusinessInsightsProps {
-  trendId?: string;
-}
+export function BusinessInsights() {
+  const { trends, topTrends, userMode, selectedLocation } = useTrends();
 
-export function BusinessInsights({ trendId }: BusinessInsightsProps) {
-  const { getFilteredTrends, getBusinessInsight, selectedLocation } = useTrends();
-  const [selectedMetric, setSelectedMetric] = useState<'mentions' | 'growth'>('mentions');
-  
-  const trends = getFilteredTrends().slice(0, 10);
-  const insight = trendId ? getBusinessInsight(trendId) : getBusinessInsight('1');
+  if (userMode !== 'business') return null;
+
+  // Calculate aggregated statistics
+  const totalMentions = trends.reduce((sum, t) => sum + t.score.mentions, 0);
+  const avgGrowth = trends.reduce((sum, t) => sum + t.score.growthRate, 0) / trends.length || 0;
+  const avgScore = trends.reduce((sum, t) => sum + t.score.normalized, 0) / trends.length || 0;
+  const viralTrends = trends.filter(t => t.score.level === 'viral' || t.score.level === 'explosive').length;
 
   const stats = [
     {
       title: 'Total Mentions',
-      value: trends.reduce((sum, t) => sum + t.mentions, 0).toLocaleString(),
-      change: '+23%',
-      trend: 'up' as const,
+      value: totalMentions.toLocaleString(),
+      change: '+12.5%',
+      trend: 'up',
       icon: Users,
-      gradient: 'from-rose-500 to-orange-500',
+      color: 'text-blue-400',
+      bg: 'bg-blue-500/10',
     },
     {
       title: 'Avg. Growth Rate',
-      value: `${Math.round(trends.reduce((sum, t) => sum + t.growthRate, 0) / trends.length)}%`,
-      change: '+12%',
-      trend: 'up' as const,
+      value: `${avgGrowth.toFixed(1)}%`,
+      change: '+8.2%',
+      trend: 'up',
       icon: TrendingUp,
-      gradient: 'from-emerald-500 to-teal-500',
+      color: 'text-emerald-400',
+      bg: 'bg-emerald-500/10',
     },
     {
-      title: 'Peak Hours',
-      value: '18:00',
-      change: '+2h',
-      trend: 'up' as const,
-      icon: Clock,
-      gradient: 'from-blue-500 to-cyan-500',
+      title: 'Avg. Trend Score',
+      value: avgScore.toFixed(0),
+      change: '+5.3',
+      trend: 'up',
+      icon: Activity,
+      color: 'text-orange-400',
+      bg: 'bg-orange-500/10',
     },
     {
-      title: 'Active Trends',
-      value: trends.length.toString(),
-      change: '+3',
-      trend: 'up' as const,
+      title: 'Viral Trends',
+      value: viralTrends.toString(),
+      change: '+2',
+      trend: 'up',
       icon: Target,
-      gradient: 'from-violet-500 to-purple-500',
+      color: 'text-rose-400',
+      bg: 'bg-rose-500/10',
     },
   ];
 
-  const chartData = insight?.peakTimes.map((pt) => ({
-    name: `${pt.day.slice(0, 3)} ${pt.hour}:00`,
-    value: pt.value,
-  })) || [
-    { name: 'Mon 12:00', value: 75 },
-    { name: 'Mon 19:00', value: 90 },
-    { name: 'Tue 12:00', value: 70 },
-    { name: 'Tue 19:00', value: 85 },
-    { name: 'Wed 12:00', value: 78 },
-    { name: 'Wed 19:00', value: 92 },
-    { name: 'Thu 12:00', value: 82 },
-    { name: 'Thu 19:00', value: 96 },
-    { name: 'Fri 18:00', value: 98 },
-    { name: 'Fri 19:00', value: 100 },
-    { name: 'Sat 12:00', value: 95 },
-    { name: 'Sat 13:00', value: 100 },
-  ];
+  // Peak hours analysis
+  const hourCounts = new Array(24).fill(0);
+  trends.forEach(trend => {
+    trend.peakHours.forEach(hour => {
+      hourCounts[hour]++;
+    });
+  });
 
-  const trendComparisonData = insight?.competitorTrends.map((ct) => ({
-    name: ct.trendName.length > 15 ? ct.trendName.slice(0, 15) + '...' : ct.trendName,
-    score: ct.score,
-    growth: ct.growthRate,
-  })) || [
-    { name: 'Rooftop Yoga', score: 78, growth: 32 },
-    { name: 'Art Gallery', score: 65, growth: 28 },
-    { name: 'Tech Meetup', score: 58, growth: 22 },
-  ];
+  const peakHour = hourCounts.indexOf(Math.max(...hourCounts));
 
   return (
     <div className="space-y-6">
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {stats.map((stat, i) => (
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <BarChart3 className="h-4 w-4 text-orange-400" />
+          <h3 className="text-sm font-semibold">Business Insights</h3>
+        </div>
+        <Badge variant="secondary" className="text-xs">
+          {selectedLocation?.city || 'Select location'}
+        </Badge>
+      </div>
+
+      {/* Stats Grid */}
+      <div className="grid grid-cols-2 gap-3">
+        {stats.map((stat, index) => (
           <motion.div
             key={stat.title}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.1 }}
+            transition={{ delay: index * 0.05 }}
           >
-            <Card className="bg-white/5 border-white/10 hover:border-rose-500/30 transition-colors">
-              <CardContent className="p-4">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <p className="text-xs text-muted-foreground">{stat.title}</p>
-                    <p className="text-2xl font-bold mt-1">{stat.value}</p>
-                  </div>
-                  <div className={cn('p-2 rounded-lg bg-gradient-to-br', stat.gradient)}>
-                    <stat.icon className="h-4 w-4 text-white" />
-                  </div>
+            <Card className="bg-white/5 border-white/10 p-4 hover:border-orange-500/30 transition-colors">
+              <div className="flex items-start justify-between">
+                <div className={cn('w-10 h-10 rounded-lg flex items-center justify-center', stat.bg)}>
+                  <stat.icon className={cn('h-5 w-5', stat.color)} />
                 </div>
-                <div className="flex items-center gap-1 mt-2 text-xs">
+                <div className={cn(
+                  'flex items-center gap-0.5 text-xs font-medium',
+                  stat.trend === 'up' ? 'text-emerald-400' : 'text-rose-400'
+                )}>
                   {stat.trend === 'up' ? (
-                    <ArrowUp className="h-3 w-3 text-emerald-400" />
-                  ) : stat.trend === 'down' ? (
-                    <ArrowDown className="h-3 w-3 text-rose-400" />
+                    <ArrowUpRight className="h-3 w-3" />
                   ) : (
-                    <Minus className="h-3 w-3 text-muted-foreground" />
+                    <ArrowDownRight className="h-3 w-3" />
                   )}
-                  <span className={stat.trend === 'up' ? 'text-emerald-400' : stat.trend === 'down' ? 'text-rose-400' : 'text-muted-foreground'}>
-                    {stat.change}
-                  </span>
-                  <span className="text-muted-foreground">vs last week</span>
+                  {stat.change}
                 </div>
-              </CardContent>
+              </div>
+              <div className="mt-3">
+                <p className="text-2xl font-bold">{stat.value}</p>
+                <p className="text-xs text-muted-foreground">{stat.title}</p>
+              </div>
             </Card>
           </motion.div>
         ))}
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-2">
-        <Card className="bg-white/5 border-white/10">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <BarChart3 className="h-5 w-5 text-rose-400" />
-              Peak Hours Analysis
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={chartData}>
-                  <defs>
-                    <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#f43f5e" stopOpacity={0.3} />
-                      <stop offset="95%" stopColor="#f43f5e" stopOpacity={0} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-                  <XAxis
-                    dataKey="name"
-                    tick={{ fill: '#9ca3af', fontSize: 10 }}
-                    axisLine={{ stroke: 'rgba(255,255,255,0.1)' }}
-                  />
-                  <YAxis
-                    tick={{ fill: '#9ca3af', fontSize: 10 }}
-                    axisLine={{ stroke: 'rgba(255,255,255,0.1)' }}
-                  />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: 'rgba(15, 12, 30, 0.95)',
-                      border: '1px solid rgba(255,255,255,0.1)',
-                      borderRadius: '8px',
-                    }}
-                  />
-                  <Area
-                    type="monotone"
-                    dataKey="value"
-                    stroke="#f43f5e"
-                    strokeWidth={2}
-                    fillOpacity={1}
-                    fill="url(#colorValue)"
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
-            <p className="text-xs text-muted-foreground mt-2 text-center">
-              Peak activity typically occurs between 18:00 - 20:00 on weekdays
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-white/5 border-white/10">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <TrendingUp className="h-5 w-5 text-orange-400" />
-              Trend Comparison
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={trendComparisonData} layout="vertical">
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-                  <XAxis type="number" tick={{ fill: '#9ca3af', fontSize: 10 }} />
-                  <YAxis
-                    type="category"
-                    dataKey="name"
-                    tick={{ fill: '#9ca3af', fontSize: 10 }}
-                    width={80}
-                  />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: 'rgba(15, 12, 30, 0.95)',
-                      border: '1px solid rgba(255,255,255,0.1)',
-                      borderRadius: '8px',
-                    }}
-                  />
-                  <Bar dataKey="score" fill="#f97316" radius={[0, 4, 4, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {insight && (
-        <Card className="bg-white/5 border-white/10">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <Lightbulb className="h-5 w-5 text-amber-400" />
-              AI Recommendations
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {insight.recommendations.map((rec, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.1 }}
-                  className="flex items-start gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
+      {/* Peak Hours */}
+      <Card className="bg-white/5 border-white/10 p-4">
+        <div className="flex items-center gap-2 mb-4">
+          <Clock className="h-4 w-4 text-muted-foreground" />
+          <h4 className="text-sm font-medium">Peak Activity Hours</h4>
+        </div>
+        
+        <div className="space-y-3">
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-muted-foreground">Busiest hour</span>
+            <span className="font-medium text-orange-400">{peakHour}:00 - {peakHour + 1}:00</span>
+          </div>
+          
+          <div className="h-16 flex items-end gap-1">
+            {hourCounts.slice(12, 22).map((count, i) => {
+              const height = Math.max(10, (count / Math.max(...hourCounts)) * 100);
+              const hour = i + 12;
+              return (
+                <div
+                  key={hour}
+                  className="flex-1 flex flex-col items-center gap-1"
                 >
-                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-gradient-to-br from-rose-500 to-orange-500 flex items-center justify-center text-white text-xs font-bold">
-                    {i + 1}
-                  </div>
-                  <p className="text-sm text-muted-foreground">{rec}</p>
-                </motion.div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      )}
+                  <div 
+                    className={cn(
+                      'w-full rounded-t-sm transition-all',
+                      hour === peakHour 
+                        ? 'bg-gradient-to-t from-orange-500 to-rose-500' 
+                        : 'bg-white/10'
+                    )}
+                    style={{ height: `${height}%` }}
+                  />
+                  <span className="text-[10px] text-muted-foreground">{hour}</span>
+                </div>
+              );
+            })}
+          </div>
+          
+          <p className="text-xs text-muted-foreground text-center">
+            Peak activity between {peakHour}:00 and {peakHour + 1}:00
+          </p>
+        </div>
+      </Card>
+
+      {/* Top Opportunities */}
+      <Card className="bg-white/5 border-white/10 p-4">
+        <div className="flex items-center gap-2 mb-4">
+          <Target className="h-4 w-4 text-muted-foreground" />
+          <h4 className="text-sm font-medium">Top Opportunities</h4>
+        </div>
+
+        <div className="space-y-2">
+          {topTrends.slice(0, 3).map((trend, index) => (
+            <motion.div
+              key={trend.id}
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.1 }}
+              className="flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 transition-colors"
+            >
+              <span className="text-xl">{getCategoryEmoji(trend.category)}</span>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium truncate">{trend.name}</p>
+                <p className="text-xs text-muted-foreground">
+                  {trend.score.growthRate}% growth • {trend.score.mentions.toLocaleString()} mentions
+                </p>
+              </div>
+              <span className={cn('text-lg font-bold', getTrendLevelColor(trend.score.level))}>
+                {trend.score.normalized}
+              </span>
+            </motion.div>
+          ))}
+        </div>
+      </Card>
     </div>
   );
 }

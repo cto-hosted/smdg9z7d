@@ -1,166 +1,79 @@
 'use client';
 
-import { useState } from 'react';
-import { Trend, TrendCategory, TrendLevel } from '@/lib/types';
+import { useTrends } from '@/lib/trend-store';
 import { TrendCard } from './trend-card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Button } from '@/components/ui/button';
-import { categories, trendLevels } from '@/lib/mock-data';
-import { useTrends } from '@/lib/trend-store';
+import { categories } from '@/lib/mock-data';
+import { TrendCategory } from '@/lib/types';
+import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { Filter, SortAsc } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
 
-interface TrendFeedProps {
-  onTrendClick?: (trend: Trend) => void;
-}
+export function TrendFeed() {
+  const { filteredTrends, selectedCategory, setSelectedCategory, isLoaded, searchQuery } = useTrends();
 
-export function TrendFeed({ onTrendClick }: TrendFeedProps) {
-  const { getFilteredTrends, filters, setFilters, isLoaded } = useTrends();
-  const [showFilters, setShowFilters] = useState(false);
-  
-  const trends = getFilteredTrends();
-
-  const sortOptions = [
-    { value: 'score', label: 'Score' },
-    { value: 'mentions', label: 'Mentions' },
-    { value: 'growth', label: 'Growth Rate' },
-    { value: 'recent', label: 'Recent' },
-  ] as const;
+  if (!isLoaded) {
+    return (
+      <div className="space-y-4">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <Skeleton key={i} className="h-32 rounded-xl" />
+        ))}
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between gap-3">
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-thin">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setShowFilters(!showFilters)}
+    <div className="space-y-6">
+      {/* Category Filter */}
+      <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-thin">
+        <button
+          onClick={() => setSelectedCategory('all')}
+          className={cn(
+            'flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-all',
+            selectedCategory === 'all'
+              ? 'bg-gradient-to-r from-orange-500 to-rose-500 text-white shadow-lg shadow-orange-500/25'
+              : 'bg-white/5 border border-white/10 hover:bg-white/10'
+          )}
+        >
+          All Trends
+        </button>
+        {categories.map((cat) => (
+          <button
+            key={cat.value}
+            onClick={() => setSelectedCategory(cat.value as TrendCategory)}
             className={cn(
-              'gap-2 border-white/10 hover:bg-white/5',
-              showFilters && 'bg-rose-500/20 border-rose-500/50'
+              'flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-all flex items-center gap-1.5',
+              selectedCategory === cat.value
+                ? 'bg-gradient-to-r from-orange-500 to-rose-500 text-white shadow-lg shadow-orange-500/25'
+                : 'bg-white/5 border border-white/10 hover:bg-white/10'
             )}
           >
-            <Filter className="h-4 w-4" />
-            <span className="hidden sm:inline">Filters</span>
-          </Button>
-          
-          <div className="flex gap-1 px-1">
-            <button
-              onClick={() => setFilters({ ...filters, category: 'all' })}
-              className={cn(
-                'px-3 py-1.5 text-xs rounded-lg transition-all whitespace-nowrap',
-                filters.category === 'all'
-                  ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30'
-                  : 'text-muted-foreground hover:bg-white/5'
-              )}
-            >
-              All
-            </button>
-            {categories.map((cat) => (
-              <button
-                key={cat.value}
-                onClick={() => setFilters({ ...filters, category: cat.value })}
-                className={cn(
-                  'px-3 py-1.5 text-xs rounded-lg transition-all whitespace-nowrap flex items-center gap-1.5',
-                  filters.category === cat.value
-                    ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30'
-                    : 'text-muted-foreground hover:bg-white/5'
-                )}
-              >
-                <span>{cat.icon}</span>
-                <span className="hidden md:inline">{cat.label}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <SortAsc className="h-4 w-4 text-muted-foreground" />
-          <select
-            value={filters.sortBy}
-            onChange={(e) => setFilters({ ...filters, sortBy: e.target.value as typeof filters.sortBy })}
-            className="bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-sm text-muted-foreground focus:outline-none focus:border-rose-500/50"
-          >
-            {sortOptions.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-        </div>
+            <span>{cat.emoji}</span>
+            <span className="hidden sm:inline">{cat.label}</span>
+          </button>
+        ))}
       </div>
 
-      <AnimatePresence>
-        {showFilters && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            className="overflow-hidden"
-          >
-            <div className="p-4 bg-white/5 rounded-xl border border-white/10 space-y-3">
-              <div>
-                <label className="text-xs text-muted-foreground mb-2 block">Trend Level</label>
-                <div className="flex flex-wrap gap-2">
-                  <button
-                    onClick={() => setFilters({ ...filters, level: 'all' })}
-                    className={cn(
-                      'px-3 py-1.5 text-xs rounded-lg transition-all',
-                      filters.level === 'all'
-                        ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30'
-                        : 'bg-white/5 text-muted-foreground hover:bg-white/10'
-                    )}
-                  >
-                    All Levels
-                  </button>
-                  {trendLevels.map((level) => (
-                    <button
-                      key={level.value}
-                      onClick={() => setFilters({ ...filters, level: level.value })}
-                      className={cn(
-                        'px-3 py-1.5 text-xs rounded-lg transition-all',
-                        filters.level === level.value
-                          ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30'
-                          : 'bg-white/5 text-muted-foreground hover:bg-white/10'
-                      )}
-                    >
-                      {level.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Results count */}
+      <div className="flex items-center justify-between">
+        <p className="text-sm text-muted-foreground">
+          {filteredTrends.length} {filteredTrends.length === 1 ? 'trend' : 'trends'}
+          {searchQuery && ` matching "${searchQuery}"`}
+        </p>
+      </div>
 
-      {!isLoaded ? (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <Skeleton key={i} className="h-40 rounded-xl" />
-          ))}
-        </div>
-      ) : trends.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-muted-foreground">No trends found matching your filters</p>
-          <Button
-            variant="link"
-            onClick={() => setFilters({ search: '', category: 'all', level: 'all', sortBy: 'score' })}
-            className="text-rose-400"
-          >
-            Clear filters
-          </Button>
-        </div>
+      {/* Trend List */}
+      {filteredTrends.length === 0 ? (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="glass-card rounded-xl border border-white/10 p-8 text-center"
+        >
+          <p className="text-muted-foreground">No trends found for this category.</p>
+        </motion.div>
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {trends.map((trend, i) => (
-            <TrendCard
-              key={trend.id}
-              trend={trend}
-              delay={i * 0.05}
-              onClick={() => onTrendClick?.(trend)}
-            />
+        <div className="grid gap-4">
+          {filteredTrends.map((trend, index) => (
+            <TrendCard key={trend.id} trend={trend} index={index} />
           ))}
         </div>
       )}

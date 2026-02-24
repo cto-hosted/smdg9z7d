@@ -19,8 +19,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'LocalTrend AI – Local Trend Detection',
-  description: 'Discover trending topics, events, and insights in your city. AI-powered trend analysis for creators and businesses.',
+  title: 'LocalTrend AI - Discover Local Trends',
+  description: 'Discover what\'s trending in your city. AI-powered trend detection for creators and businesses.',
 };
 
 export default function RootLayout({

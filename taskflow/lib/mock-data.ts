@@ -1,278 +1,137 @@
-import { Trend, Location, CreatorContent, BusinessInsight, TrendCategory, TrendLevel } from './types';
+import { Trend, Location, CreatorContent, TrendCategory } from './types';
+import { calculateTrendScore, getTrendLevel } from './trend-algorithm';
 
 export const sampleLocations: Location[] = [
-  { id: '1', name: 'Berlin', country: 'Germany', coordinates: { lat: 52.52, lng: 13.405 } },
-  { id: '2', name: 'Hamburg', country: 'Germany', coordinates: { lat: 53.5511, lng: 9.9937 } },
-  { id: '3', name: 'Munich', country: 'Germany', coordinates: { lat: 48.1351, lng: 11.582 } },
-  { id: '4', name: 'Cologne', country: 'Germany', coordinates: { lat: 50.9375, lng: 6.9603 } },
-  { id: '5', name: 'Frankfurt', country: 'Germany', coordinates: { lat: 50.1109, lng: 8.6821 } },
-  { id: '6', name: 'Vienna', country: 'Austria', coordinates: { lat: 48.2082, lng: 16.3738 } },
-  { id: '7', name: 'Zurich', country: 'Switzerland', coordinates: { lat: 47.3769, lng: 8.5417 } },
-  { id: '8', name: 'Paris', country: 'France', coordinates: { lat: 48.8566, lng: 2.3522 } },
-  { id: '9', name: 'London', country: 'UK', coordinates: { lat: 51.5074, lng: -0.1278 } },
-  { id: '10', name: 'New York', country: 'USA', coordinates: { lat: 40.7128, lng: -74.006 } },
+  { id: '1', name: 'Berlin', city: 'Berlin', country: 'Germany', coordinates: { lat: 52.52, lng: 13.405 } },
+  { id: '2', name: 'Hamburg', city: 'Hamburg', country: 'Germany', coordinates: { lat: 53.5511, lng: 9.9937 } },
+  { id: '3', name: 'München', city: 'Munich', country: 'Germany', coordinates: { lat: 48.1351, lng: 11.582 } },
+  { id: '4', name: 'Köln', city: 'Cologne', country: 'Germany', coordinates: { lat: 50.9375, lng: 6.9603 } },
+  { id: '5', name: 'Frankfurt', city: 'Frankfurt', country: 'Germany', coordinates: { lat: 50.1109, lng: 8.6821 } },
+  { id: '6', name: 'New York', city: 'New York', country: 'USA', coordinates: { lat: 40.7128, lng: -74.006 } },
+  { id: '7', name: 'Los Angeles', city: 'Los Angeles', country: 'USA', coordinates: { lat: 34.0522, lng: -118.2437 } },
+  { id: '8', name: 'London', city: 'London', country: 'UK', coordinates: { lat: 51.5074, lng: -0.1278 } },
+  { id: '9', name: 'Paris', city: 'Paris', country: 'France', coordinates: { lat: 48.8566, lng: 2.3522 } },
+  { id: '10', name: 'Tokyo', city: 'Tokyo', country: 'Japan', coordinates: { lat: 35.6762, lng: 139.6503 } },
 ];
 
-export const sampleTrends: Trend[] = [
-  {
-    id: '1',
-    name: 'Street Food Festival',
-    category: 'food',
-    location: sampleLocations[0],
-    mentions: 15420,
-    growthRate: 45,
-    timeDecay: 24,
-    score: 92,
-    level: 'explosive',
-    keywords: ['streetfood', 'foodfestival', 'berlinfood', 'streetfoodfestival'],
-    peakHours: [12, 13, 18, 19, 20],
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    id: '2',
-    name: 'Rooftop Yoga',
-    category: 'lifestyle',
-    location: sampleLocations[0],
-    mentions: 8750,
-    growthRate: 32,
-    timeDecay: 48,
-    score: 78,
-    level: 'viral',
-    keywords: ['yoga', 'rooftop', 'wellness', 'morningyoga'],
-    peakHours: [7, 8, 9, 18, 19],
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    id: '3',
-    name: 'Techno Night',
-    category: 'nightlife',
-    location: sampleLocations[0],
-    mentions: 12300,
-    growthRate: 55,
-    timeDecay: 12,
-    score: 95,
-    level: 'explosive',
-    keywords: ['techno', 'club', 'berlinclub', 'nachtleben', 'electronic'],
-    peakHours: [22, 23, 0, 1, 2],
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    id: '4',
-    name: 'Art Gallery Opening',
-    category: 'events',
-    location: sampleLocations[0],
-    mentions: 5200,
-    growthRate: 28,
-    timeDecay: 72,
-    score: 65,
-    level: 'viral',
-    keywords: ['art', 'gallery', 'exhibition', 'kunst', 'opening'],
-    peakHours: [18, 19, 20],
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    id: '5',
-    name: 'Startup Meetup',
-    category: 'tech',
-    location: sampleLocations[0],
-    mentions: 6800,
-    growthRate: 22,
-    timeDecay: 36,
-    score: 58,
-    level: 'rising',
-    keywords: ['startup', 'tech', 'networking', ' Gründer', 'business'],
-    peakHours: [18, 19, 20],
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    id: '6',
-    name: 'Vintage Market',
-    category: 'fashion',
-    location: sampleLocations[0],
-    mentions: 4100,
-    growthRate: 18,
-    timeDecay: 96,
-    score: 42,
-    level: 'rising',
-    keywords: ['vintage', 'fleamarket', 'secondhand', 'nachhaltig'],
-    peakHours: [10, 11, 12, 13],
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    id: '7',
-    name: 'Jazz Brunch',
-    category: 'music',
-    location: sampleLocations[0],
-    mentions: 3200,
-    growthRate: 15,
-    timeDecay: 120,
-    score: 38,
-    level: 'low',
-    keywords: ['jazz', 'brunch', 'live music', 'sunday'],
-    peakHours: [11, 12, 13],
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    id: '8',
-    name: 'CrossFit Challenge',
-    category: 'sports',
-    location: sampleLocations[0],
-    mentions: 5800,
-    growthRate: 35,
-    timeDecay: 24,
-    score: 72,
-    level: 'viral',
-    keywords: ['crossfit', 'fitness', 'workout', 'challenge'],
-    peakHours: [7, 8, 17, 18, 19],
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    id: '9',
-    name: 'Craft Beer Festival',
-    category: 'food',
-    location: sampleLocations[1],
-    mentions: 9800,
-    growthRate: 42,
-    timeDecay: 18,
-    score: 88,
-    level: 'explosive',
-    keywords: ['craftbeer', 'bierfest', 'hamburg', 'brewery'],
-    peakHours: [17, 18, 19, 20, 21],
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    id: '10',
-    name: 'Open Air Cinema',
-    category: 'events',
-    location: sampleLocations[2],
-    mentions: 7600,
-    growthRate: 38,
-    timeDecay: 24,
-    score: 82,
-    level: 'viral',
-    keywords: ['openair', 'cinema', 'freiluftkino', 'münchen'],
-    peakHours: [20, 21, 22],
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    id: '11',
-    name: 'AI Conference',
-    category: 'tech',
-    location: sampleLocations[4],
-    mentions: 11200,
-    growthRate: 58,
-    timeDecay: 12,
-    score: 94,
-    level: 'explosive',
-    keywords: ['ai', 'künstlicheintelligenz', 'conference', 'tech'],
-    peakHours: [9, 10, 11, 14, 15],
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    id: '12',
-    name: 'Fashion Week',
-    category: 'fashion',
-    location: sampleLocations[8],
-    mentions: 18500,
-    growthRate: 65,
-    timeDecay: 8,
-    score: 98,
-    level: 'explosive',
-    keywords: ['fashionweek', 'mode', 'londonfashion', 'runway'],
-    peakHours: [14, 15, 16, 18, 19],
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
-];
+const generateTrends = (location: Location): Trend[] => {
+  const trendTemplates = [
+    { name: 'Art', category: 'art' as TrendCategory, keywords: ['gallery', 'exhibition', 'contemporary'] },
+    { name: 'Sushi-Restaurant', category: 'food' as TrendCategory, keywords: ['omakase', 'izakaya', 'japanese'] },
+    { name: 'Rooftop-Bar', category: 'nightlife' as TrendCategory, keywords: ['cocktails', 'skybar', 'views'] },
+    { name: 'Vintage-Mode', category: 'fashion' as TrendCategory, keywords: ['thrift', 'retro', 'secondhand'] },
+    { name: 'Techno-Club', category: 'music' as TrendCategory, keywords: ['dj', 'electronic', 'underground'] },
+    { name: 'Yoga-Event', category: 'wellness' as TrendCategory, keywords: ['meditation', 'soundbath', 'retreat'] },
+    { name: 'Food-Truck-Festival', category: 'events' as TrendCategory, keywords: ['streetfood', 'outdoor', 'festival'] },
+    { name: 'Kajak-Tour', category: 'travel' as TrendCategory, keywords: ['water', 'adventure', 'nature'] },
+    { name: 'Fussball-Match', category: 'sports' as TrendCategory, keywords: ['bundesliga', 'public-viewing', 'live'] },
+    { name: 'Tech-Startup-Event', category: 'tech' as TrendCategory, keywords: ['networking', 'innovation', 'pitch'] },
+    { name: 'Craft-Beer-Garten', category: 'food' as TrendCategory, keywords: ['brewery', 'local', 'outdoor'] },
+    { name: 'Vinyl-Store', category: 'music' as TrendCategory, keywords: ['record', 'vintage', 'collectors'] },
+    { name: 'Street-Art-Tour', category: 'art' as TrendCategory, keywords: ['graffiti', 'murals', 'walking'] },
+    { name: 'Fitness-Camp', category: 'wellness' as TrendCategory, keywords: ['outdoor', 'bootcamp', 'community'] },
+    { name: 'Pop-up-Shop', category: 'fashion' as TrendCategory, keywords: ['limited', 'collaboration', 'exclusive'] },
+  ];
+
+  return trendTemplates.map((template, index) => {
+    const mentions = Math.floor(Math.random() * 5000) + 500;
+    const growthRate = Math.floor(Math.random() * 150) + 10;
+    const rawScore = calculateTrendScore(mentions, growthRate);
+    const normalizedScore = Math.round(rawScore);
+
+    return {
+      id: `${location.id}-${index}`,
+      name: `${template.name} in ${location.city}`,
+      category: template.category,
+      location,
+      score: {
+        raw: rawScore,
+        normalized: normalizedScore,
+        level: getTrendLevel(normalizedScore),
+        mentions,
+        growthRate,
+        timeDecay: 1,
+      },
+      description: `The latest ${template.name.toLowerCase()} trend making waves in ${location.city}. Popular keywords: ${template.keywords.join(', ')}.`,
+      keywords: template.keywords,
+      peakHours: generatePeakHours(),
+      relatedTrends: [],
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+  });
+};
+
+function generatePeakHours(): number[] {
+  const peakTimes = [18, 19, 20, 21, 22, 23];
+  const randomPeaks = peakTimes.filter(() => Math.random() > 0.5);
+  return randomPeaks.length > 0 ? randomPeaks : [19, 20, 21];
+}
+
+export const sampleTrends: Trend[] = sampleLocations.flatMap(generateTrends);
 
 export const sampleCreatorContent: CreatorContent[] = [
   {
     id: '1',
-    trendId: '1',
     type: 'hook',
-    content: '🔥 Berlin\'s biggest street food festival is HERE! Are you ready for this?',
     platform: 'tiktok',
+    content: "🔥 Wait till you see what's trending in Berlin right now!",
+    trendId: '1-0',
     createdAt: new Date().toISOString(),
   },
   {
     id: '2',
-    trendId: '1',
     type: 'caption',
-    content: 'Street food so good, you\'ll forget about your diet 🍔🍕🌮 #StreetFoodFestival #BerlinFood #Foodie',
     platform: 'instagram',
+    content: "Living my best life at the hottest rooftop bar in town 🍸✨ #trending #nightlife #cityvibes",
+    trendId: '1-2',
     createdAt: new Date().toISOString(),
   },
   {
     id: '3',
-    trendId: '1',
     type: 'hashtags',
-    content: '#StreetFoodFestival #BerlinEats #Foodie #FoodLover #StreetFood #BerlinFood #GermanFood #FoodBlog #FoodPorn #Yummy',
-    platform: 'instagram',
+    platform: 'tiktok',
+    content: "#BerlinNights #RooftopVibes #CityLife #NightOut #TrendingNow #MustVisit #WeekendPlans",
+    trendId: '1-2',
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: '4',
+    type: 'script',
+    platform: 'youtube',
+    content: "Hey everyone! Today we're exploring the top 5 trends taking over Berlin right now. From food to fashion, this city is buzzing! Let's dive in...",
+    trendId: '1-0',
     createdAt: new Date().toISOString(),
   },
 ];
 
-export const sampleBusinessInsights: BusinessInsight[] = [
-  {
-    id: '1',
-    trendId: '1',
-    locationId: '1',
-    peakTimes: [
-      { day: 'Monday', hour: 12, value: 75 },
-      { day: 'Monday', hour: 13, value: 85 },
-      { day: 'Monday', hour: 18, value: 90 },
-      { day: 'Monday', hour: 19, value: 95 },
-      { day: 'Tuesday', hour: 12, value: 70 },
-      { day: 'Tuesday', hour: 19, value: 88 },
-      { day: 'Wednesday', hour: 12, value: 78 },
-      { day: 'Wednesday', hour: 19, value: 92 },
-      { day: 'Thursday', hour: 12, value: 82 },
-      { day: 'Thursday', hour: 19, value: 96 },
-      { day: 'Friday', hour: 18, value: 98 },
-      { day: 'Friday', hour: 19, value: 100 },
-      { day: 'Saturday', hour: 12, value: 95 },
-      { day: 'Saturday', hour: 13, value: 100 },
-      { day: 'Sunday', hour: 12, value: 85 },
-    ],
-    competitorTrends: [
-      { trendId: '2', trendName: 'Rooftop Yoga', score: 78, growthRate: 32 },
-      { trendId: '4', trendName: 'Art Gallery Opening', score: 65, growthRate: 28 },
-    ],
-    recommendations: [
-      'Launch promotional offers during peak hours (18:00-20:00)',
-      'Partner with local food influencers for increased visibility',
-      'Consider extending weekend hours to capture peak demand',
-      'Create social media content showcasing vendor variety',
-    ],
-    generatedAt: new Date().toISOString(),
-  },
-];
+export function getTrendsByLocation(locationId: string): Trend[] {
+  return sampleTrends.filter((trend) => trend.location.id === locationId);
+}
 
-export const categories: { value: TrendCategory; label: string; icon: string }[] = [
-  { value: 'food', label: 'Food & Drinks', icon: '🍔' },
-  { value: 'events', label: 'Events', icon: '🎉' },
-  { value: 'music', label: 'Music', icon: '🎵' },
-  { value: 'fashion', label: 'Fashion', icon: '👗' },
-  { value: 'tech', label: 'Tech & Startups', icon: '💻' },
-  { value: 'sports', label: 'Sports', icon: '⚽' },
-  { value: 'nightlife', label: 'Nightlife', icon: '🌙' },
-  { value: 'lifestyle', label: 'Lifestyle', icon: '✨' },
-];
+export function getTrendById(id: string): Trend | undefined {
+  return sampleTrends.find((trend) => trend.id === id);
+}
 
-export const trendLevels: { value: TrendLevel; label: string; color: string }[] = [
-  { value: 'low', label: 'Low', color: 'text-muted-foreground' },
-  { value: 'rising', label: 'Rising', color: 'text-amber-400' },
-  { value: 'viral', label: 'Viral', color: 'text-orange-500' },
-  { value: 'explosive', label: 'Explosive', color: 'text-rose-500' },
+export function getTrendsByCategory(category: TrendCategory): Trend[] {
+  return sampleTrends.filter((trend) => trend.category === category);
+}
+
+export function getTopTrends(locationId: string, limit: number = 10): Trend[] {
+  return getTrendsByLocation(locationId)
+    .sort((a, b) => b.score.normalized - a.score.normalized)
+    .slice(0, limit);
+}
+
+export const categories: { value: TrendCategory; label: string; emoji: string }[] = [
+  { value: 'food', label: 'Food & Drinks', emoji: '🍽️' },
+  { value: 'fashion', label: 'Fashion', emoji: '👗' },
+  { value: 'music', label: 'Music', emoji: '🎵' },
+  { value: 'events', label: 'Events', emoji: '🎉' },
+  { value: 'nightlife', label: 'Nightlife', emoji: '🌙' },
+  { value: 'sports', label: 'Sports', emoji: '⚽' },
+  { value: 'tech', label: 'Tech', emoji: '💻' },
+  { value: 'travel', label: 'Travel', emoji: '✈️' },
+  { value: 'wellness', label: 'Wellness', emoji: '🧘' },
+  { value: 'art', label: 'Art & Culture', emoji: '🎨' },
 ];
