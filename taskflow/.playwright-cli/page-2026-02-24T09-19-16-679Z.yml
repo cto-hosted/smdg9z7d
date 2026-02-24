@@ -1,0 +1,155 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e5]:
+      - generic [ref=e6]:
+        - img [ref=e8]
+        - generic [ref=e10]: LocalTrend
+        - generic [ref=e11]: AI
+      - navigation [ref=e12]:
+        - link "Feed" [ref=e13] [cursor=pointer]:
+          - /url: /
+          - img [ref=e14]
+          - text: Feed
+        - link "Creator" [active] [ref=e20] [cursor=pointer]:
+          - /url: /creator
+          - img [ref=e21]
+          - text: Creator
+        - link "Business" [ref=e24] [cursor=pointer]:
+          - /url: /business
+          - img [ref=e25]
+          - text: Business
+      - generic [ref=e28]:
+        - paragraph [ref=e29]: Mode
+        - generic [ref=e30]:
+          - button "Creator" [ref=e31]:
+            - img [ref=e32]
+            - generic [ref=e35]: Creator
+          - button "Business" [ref=e36]:
+            - img [ref=e37]
+            - generic [ref=e39]: Business
+      - generic [ref=e41]:
+        - paragraph [ref=e42]:
+          - img [ref=e43]
+          - text: Pro Tip
+        - paragraph [ref=e45]: Switch between Creator and Business modes to get personalized insights.
+    - generic [ref=e46]:
+      - banner [ref=e47]:
+        - generic [ref=e48]:
+          - generic [ref=e51]:
+            - img [ref=e52]
+            - textbox "Search city..." [ref=e55]
+          - generic [ref=e57]:
+            - img [ref=e58]
+            - generic [ref=e61]: Berlin
+        - generic [ref=e62]:
+          - button [ref=e63]:
+            - img [ref=e64]
+          - generic [ref=e69]: creator
+          - button "Toggle theme" [ref=e191]:
+            - img
+          - generic [ref=e72]: LT
+      - main [ref=e73]:
+        - generic [ref=e491]:
+          - generic [ref=e493]:
+            - heading "Creator Studio" [level=2] [ref=e494]
+            - paragraph [ref=e495]: AI-powered content generation for trending topics in Berlin
+          - generic [ref=e496]:
+            - generic [ref=e499]:
+              - generic [ref=e501]:
+                - img [ref=e502]
+                - text: AI Content Generator
+              - generic [ref=e505]:
+                - generic [ref=e506]:
+                  - generic [ref=e507]:
+                    - text: Trend / Topic
+                    - textbox "e.g., Street Food Festival" [ref=e508]
+                  - generic [ref=e509]:
+                    - text: Location (optional)
+                    - textbox "Berlin" [ref=e510]
+                - generic [ref=e511]:
+                  - text: Content Type
+                  - generic [ref=e512]:
+                    - button "⚡ Hook" [ref=e513]:
+                      - generic [ref=e514]: ⚡
+                      - text: Hook
+                    - button "✍️ Caption" [ref=e515]:
+                      - generic [ref=e516]: ✍️
+                      - text: Caption
+                    - button "#️⃣ Hashtags" [ref=e517]:
+                      - generic [ref=e518]: "#️⃣"
+                      - text: Hashtags
+                    - button "🎬 Script" [ref=e519]:
+                      - generic [ref=e520]: 🎬
+                      - text: Script
+                - generic [ref=e521]:
+                  - text: Platform
+                  - generic [ref=e522]:
+                    - button "🎵 tiktok" [ref=e523]:
+                      - generic [ref=e524]: 🎵
+                      - text: tiktok
+                    - button "instagram" [ref=e525]:
+                      - img [ref=e526]
+                      - text: instagram
+                    - button "youtube" [ref=e529]:
+                      - img [ref=e530]
+                      - text: youtube
+                - button "Generate Content" [disabled]:
+                  - img
+                  - text: Generate Content
+            - generic [ref=e533]:
+              - generic [ref=e534]:
+                - generic [ref=e536]:
+                  - img [ref=e537]
+                  - text: Saved Content
+                - generic [ref=e540]:
+                  - generic [ref=e541]:
+                    - generic [ref=e542]:
+                      - generic [ref=e543]:
+                        - generic [ref=e544]:
+                          - generic [ref=e545]: 🎵
+                          - generic [ref=e546]: tiktok
+                        - generic [ref=e547]: hook
+                      - generic [ref=e548]:
+                        - button [ref=e549]:
+                          - img
+                        - button [ref=e550]:
+                          - img
+                    - paragraph [ref=e551]: 🔥 Berlin's biggest street food festival is HERE! Are you ready for this?
+                  - generic [ref=e552]:
+                    - generic [ref=e553]:
+                      - generic [ref=e554]:
+                        - generic [ref=e555]:
+                          - img
+                          - generic [ref=e556]: instagram
+                        - generic [ref=e557]: caption
+                      - generic [ref=e558]:
+                        - button [ref=e559]:
+                          - img
+                        - button [ref=e560]:
+                          - img
+                    - paragraph [ref=e561]: "Street food so good, you'll forget about your diet 🍔🍕🌮 #StreetFoodFestival #BerlinFood #Foodie"
+                  - generic [ref=e562]:
+                    - generic [ref=e563]:
+                      - generic [ref=e564]:
+                        - generic [ref=e565]:
+                          - img
+                          - generic [ref=e566]: instagram
+                        - generic [ref=e567]: hashtags
+                      - generic [ref=e568]:
+                        - button [ref=e569]:
+                          - img
+                        - button [ref=e570]:
+                          - img
+                    - paragraph [ref=e571]: "#StreetFoodFestival #BerlinEats #Foodie #FoodLover #StreetFood #BerlinFood #GermanFood #FoodBlog #FoodPorn #Yummy"
+              - generic [ref=e574]:
+                - img [ref=e576]
+                - generic [ref=e578]:
+                  - paragraph [ref=e579]: Pro Tips
+                  - list [ref=e580]:
+                    - listitem [ref=e581]: • Use specific location names for better results
+                    - listitem [ref=e582]: • Include relevant hashtags to boost visibility
+                    - listitem [ref=e583]: • Save your best content for later use
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e187] [cursor=pointer]:
+    - img [ref=e188]
+  - alert [ref=e489]

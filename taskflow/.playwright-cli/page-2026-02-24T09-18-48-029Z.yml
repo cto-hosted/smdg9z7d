@@ -1,0 +1,362 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e5]:
+      - generic [ref=e6]:
+        - img [ref=e8]
+        - generic [ref=e10]: LocalTrend
+        - generic [ref=e11]: AI
+      - navigation [ref=e12]:
+        - link "Feed" [ref=e13] [cursor=pointer]:
+          - /url: /
+          - img [ref=e14]
+          - text: Feed
+        - link "Creator" [ref=e20] [cursor=pointer]:
+          - /url: /creator
+          - img [ref=e21]
+          - text: Creator
+        - link "Business" [ref=e24] [cursor=pointer]:
+          - /url: /business
+          - img [ref=e25]
+          - text: Business
+      - generic [ref=e28]:
+        - paragraph [ref=e29]: Mode
+        - generic [ref=e30]:
+          - button "Creator" [ref=e31]:
+            - img [ref=e32]
+            - generic [ref=e35]: Creator
+          - button "Business" [ref=e36]:
+            - img [ref=e37]
+            - generic [ref=e39]: Business
+      - generic [ref=e41]:
+        - paragraph [ref=e42]:
+          - img [ref=e43]
+          - text: Pro Tip
+        - paragraph [ref=e45]: Switch between Creator and Business modes to get personalized insights.
+    - generic [ref=e46]:
+      - banner [ref=e47]:
+        - generic [ref=e48]:
+          - generic [ref=e51]:
+            - img [ref=e52]
+            - textbox "Search city..." [ref=e55]
+          - generic [ref=e57]:
+            - img [ref=e58]
+            - generic [ref=e61]: Berlin
+        - generic [ref=e62]:
+          - button [ref=e63]:
+            - img [ref=e64]
+          - generic [ref=e69]: creator
+          - button "Toggle theme" [ref=e191]:
+            - img
+          - generic [ref=e72]: LT
+      - main [ref=e73]:
+        - generic [ref=e74]:
+          - generic [ref=e75]:
+            - generic [ref=e76]:
+              - heading "Trending Now" [level=2] [ref=e77]
+              - paragraph [ref=e78]: Discover what's hot in Berlin
+            - generic [ref=e81]:
+              - img [ref=e82]
+              - textbox "Search city..." [ref=e85]
+          - generic [ref=e86]:
+            - generic [ref=e195]:
+              - generic [ref=e196]:
+                - paragraph [ref=e197]: Active Trends
+                - paragraph [ref=e198]: "8"
+                - paragraph [ref=e199]: trending in Berlin
+              - img [ref=e201]
+            - generic [ref=e206]:
+              - generic [ref=e207]:
+                - paragraph [ref=e208]: Viral & Explosive
+                - paragraph [ref=e209]: "5"
+                - paragraph [ref=e210]: trends with high growth
+              - img [ref=e212]
+            - generic [ref=e218]:
+              - generic [ref=e219]:
+                - paragraph [ref=e220]: Rising Stars
+                - paragraph [ref=e221]: "2"
+                - paragraph [ref=e222]: trends gaining momentum
+              - img [ref=e224]
+            - generic [ref=e229]:
+              - generic [ref=e230]:
+                - paragraph [ref=e231]: Avg Score
+                - paragraph [ref=e232]: "68"
+                - paragraph [ref=e233]: trend score across all
+              - img [ref=e235]
+          - generic [ref=e91]:
+            - generic [ref=e92]:
+              - generic [ref=e93]:
+                - img [ref=e94]
+                - heading "Top 3 Trends" [level=3] [ref=e96]
+              - button "View all" [ref=e97]:
+                - text: View all
+                - img
+            - generic [ref=e98]:
+              - generic [ref=e100] [cursor=pointer]:
+                - generic [ref=e101]: "#1"
+                - generic [ref=e102]:
+                  - paragraph [ref=e103]: Techno Night
+                  - paragraph [ref=e104]: nightlife • explosive
+                - generic [ref=e106]:
+                  - img [ref=e107]
+                  - generic [ref=e238]: "95"
+              - generic [ref=e112] [cursor=pointer]:
+                - generic [ref=e113]: "#2"
+                - generic [ref=e114]:
+                  - paragraph [ref=e115]: Street Food Festival
+                  - paragraph [ref=e116]: food • explosive
+                - generic [ref=e118]:
+                  - img [ref=e119]
+                  - generic [ref=e239]: "92"
+              - generic [ref=e124] [cursor=pointer]:
+                - generic [ref=e125]: "#3"
+                - generic [ref=e126]:
+                  - paragraph [ref=e127]: Rooftop Yoga
+                  - paragraph [ref=e128]: lifestyle • viral
+                - generic [ref=e130]:
+                  - img [ref=e131]
+                  - generic [ref=e240]: "78"
+          - generic [ref=e135]:
+            - heading "All Trends" [level=3] [ref=e136]
+            - generic [ref=e137]:
+              - button "Creator" [ref=e138]:
+                - img
+                - text: Creator
+              - button "Business" [ref=e139]:
+                - img
+                - text: Business
+          - generic [ref=e140]:
+            - generic [ref=e141]:
+              - generic [ref=e142]:
+                - button "Filters" [ref=e143]:
+                  - img
+                  - generic [ref=e144]: Filters
+                - generic [ref=e145]:
+                  - button "All" [ref=e146]
+                  - button "🍔 Food & Drinks" [ref=e147]:
+                    - generic [ref=e148]: 🍔
+                    - generic [ref=e149]: Food & Drinks
+                  - button "🎉 Events" [ref=e150]:
+                    - generic [ref=e151]: 🎉
+                    - generic [ref=e152]: Events
+                  - button "🎵 Music" [ref=e153]:
+                    - generic [ref=e154]: 🎵
+                    - generic [ref=e155]: Music
+                  - button "👗 Fashion" [ref=e156]:
+                    - generic [ref=e157]: 👗
+                    - generic [ref=e158]: Fashion
+                  - button "💻 Tech & Startups" [ref=e159]:
+                    - generic [ref=e160]: 💻
+                    - generic [ref=e161]: Tech & Startups
+                  - button "⚽ Sports" [ref=e162]:
+                    - generic [ref=e163]: ⚽
+                    - generic [ref=e164]: Sports
+                  - button "🌙 Nightlife" [ref=e165]:
+                    - generic [ref=e166]: 🌙
+                    - generic [ref=e167]: Nightlife
+                  - button "✨ Lifestyle" [ref=e168]:
+                    - generic [ref=e169]: ✨
+                    - generic [ref=e170]: Lifestyle
+              - generic [ref=e171]:
+                - img [ref=e172]
+                - combobox [ref=e174]:
+                  - option "Score" [selected]
+                  - option "Mentions"
+                  - option "Growth Rate"
+                  - option "Recent"
+            - generic [ref=e175]:
+              - generic [ref=e244] [cursor=pointer]:
+                - generic [ref=e245]:
+                  - generic [ref=e246]:
+                    - generic [ref=e247]:
+                      - generic [ref=e248]: explosive
+                      - generic [ref=e249]: nightlife
+                    - heading "Techno Night" [level=3] [ref=e250]
+                    - generic [ref=e251]:
+                      - img [ref=e252]
+                      - text: Berlin
+                  - generic [ref=e255]:
+                    - generic [ref=e256]: "95"
+                    - generic [ref=e257]:
+                      - img [ref=e258]
+                      - generic [ref=e261]: +55%
+                - generic [ref=e262]:
+                  - generic [ref=e264]: 12,300 mentions
+                  - button [ref=e266]:
+                    - img
+                - generic [ref=e267]:
+                  - generic [ref=e268]: "#techno"
+                  - generic [ref=e269]: "#club"
+                  - generic [ref=e270]: "#berlinclub"
+                  - generic [ref=e271]: "+2"
+              - generic [ref=e275] [cursor=pointer]:
+                - generic [ref=e276]:
+                  - generic [ref=e277]:
+                    - generic [ref=e278]:
+                      - generic [ref=e279]: explosive
+                      - generic [ref=e280]: food
+                    - heading "Street Food Festival" [level=3] [ref=e281]
+                    - generic [ref=e282]:
+                      - img [ref=e283]
+                      - text: Berlin
+                  - generic [ref=e286]:
+                    - generic [ref=e287]: "92"
+                    - generic [ref=e288]:
+                      - img [ref=e289]
+                      - generic [ref=e292]: +45%
+                - generic [ref=e293]:
+                  - generic [ref=e295]: 15,420 mentions
+                  - button [ref=e297]:
+                    - img
+                - generic [ref=e298]:
+                  - generic [ref=e299]: "#streetfood"
+                  - generic [ref=e300]: "#foodfestival"
+                  - generic [ref=e301]: "#berlinfood"
+                  - generic [ref=e302]: "+1"
+              - generic [ref=e306] [cursor=pointer]:
+                - generic [ref=e307]:
+                  - generic [ref=e308]:
+                    - generic [ref=e309]:
+                      - generic [ref=e310]: viral
+                      - generic [ref=e311]: lifestyle
+                    - heading "Rooftop Yoga" [level=3] [ref=e312]
+                    - generic [ref=e313]:
+                      - img [ref=e314]
+                      - text: Berlin
+                  - generic [ref=e317]:
+                    - generic [ref=e318]: "78"
+                    - generic [ref=e319]:
+                      - img [ref=e320]
+                      - generic [ref=e323]: +32%
+                - generic [ref=e324]:
+                  - generic [ref=e326]: 8,750 mentions
+                  - button [ref=e328]:
+                    - img
+                - generic [ref=e329]:
+                  - generic [ref=e330]: "#yoga"
+                  - generic [ref=e331]: "#rooftop"
+                  - generic [ref=e332]: "#wellness"
+                  - generic [ref=e333]: "+1"
+              - generic [ref=e337] [cursor=pointer]:
+                - generic [ref=e338]:
+                  - generic [ref=e339]:
+                    - generic [ref=e340]:
+                      - generic [ref=e341]: viral
+                      - generic [ref=e342]: sports
+                    - heading "CrossFit Challenge" [level=3] [ref=e343]
+                    - generic [ref=e344]:
+                      - img [ref=e345]
+                      - text: Berlin
+                  - generic [ref=e348]:
+                    - generic [ref=e349]: "72"
+                    - generic [ref=e350]:
+                      - img [ref=e351]
+                      - generic [ref=e354]: +35%
+                - generic [ref=e355]:
+                  - generic [ref=e357]: 5,800 mentions
+                  - button [ref=e359]:
+                    - img
+                - generic [ref=e360]:
+                  - generic [ref=e361]: "#crossfit"
+                  - generic [ref=e362]: "#fitness"
+                  - generic [ref=e363]: "#workout"
+                  - generic [ref=e364]: "+1"
+              - generic [ref=e368] [cursor=pointer]:
+                - generic [ref=e369]:
+                  - generic [ref=e370]:
+                    - generic [ref=e371]:
+                      - generic [ref=e372]: viral
+                      - generic [ref=e373]: events
+                    - heading "Art Gallery Opening" [level=3] [ref=e374]
+                    - generic [ref=e375]:
+                      - img [ref=e376]
+                      - text: Berlin
+                  - generic [ref=e379]:
+                    - generic [ref=e380]: "65"
+                    - generic [ref=e381]:
+                      - img [ref=e382]
+                      - generic [ref=e385]: +28%
+                - generic [ref=e386]:
+                  - generic [ref=e388]: 5,200 mentions
+                  - button [ref=e390]:
+                    - img
+                - generic [ref=e391]:
+                  - generic [ref=e392]: "#art"
+                  - generic [ref=e393]: "#gallery"
+                  - generic [ref=e394]: "#exhibition"
+                  - generic [ref=e395]: "+2"
+              - generic [ref=e399] [cursor=pointer]:
+                - generic [ref=e400]:
+                  - generic [ref=e401]:
+                    - generic [ref=e402]:
+                      - generic [ref=e403]: rising
+                      - generic [ref=e404]: tech
+                    - heading "Startup Meetup" [level=3] [ref=e405]
+                    - generic [ref=e406]:
+                      - img [ref=e407]
+                      - text: Berlin
+                  - generic [ref=e410]:
+                    - generic [ref=e411]: "58"
+                    - generic [ref=e412]:
+                      - img [ref=e413]
+                      - generic [ref=e416]: +22%
+                - generic [ref=e417]:
+                  - generic [ref=e419]: 6,800 mentions
+                  - button [ref=e421]:
+                    - img
+                - generic [ref=e422]:
+                  - generic [ref=e423]: "#startup"
+                  - generic [ref=e424]: "#tech"
+                  - generic [ref=e425]: "#networking"
+                  - generic [ref=e426]: "+2"
+              - generic [ref=e430] [cursor=pointer]:
+                - generic [ref=e431]:
+                  - generic [ref=e432]:
+                    - generic [ref=e433]:
+                      - generic [ref=e434]: rising
+                      - generic [ref=e435]: fashion
+                    - heading "Vintage Market" [level=3] [ref=e436]
+                    - generic [ref=e437]:
+                      - img [ref=e438]
+                      - text: Berlin
+                  - generic [ref=e441]:
+                    - generic [ref=e442]: "42"
+                    - generic [ref=e443]:
+                      - img [ref=e444]
+                      - generic [ref=e447]: +18%
+                - generic [ref=e448]:
+                  - generic [ref=e450]: 4,100 mentions
+                  - button [ref=e452]:
+                    - img
+                - generic [ref=e453]:
+                  - generic [ref=e454]: "#vintage"
+                  - generic [ref=e455]: "#fleamarket"
+                  - generic [ref=e456]: "#secondhand"
+                  - generic [ref=e457]: "+1"
+              - generic [ref=e461] [cursor=pointer]:
+                - generic [ref=e462]:
+                  - generic [ref=e463]:
+                    - generic [ref=e464]:
+                      - generic [ref=e465]: low
+                      - generic [ref=e466]: music
+                    - heading "Jazz Brunch" [level=3] [ref=e467]
+                    - generic [ref=e468]:
+                      - img [ref=e469]
+                      - text: Berlin
+                  - generic [ref=e472]:
+                    - generic [ref=e473]: "38"
+                    - generic [ref=e474]:
+                      - img [ref=e475]
+                      - generic [ref=e478]: +15%
+                - generic [ref=e479]:
+                  - generic [ref=e481]: 3,200 mentions
+                  - button [ref=e483]:
+                    - img
+                - generic [ref=e484]:
+                  - generic [ref=e485]: "#jazz"
+                  - generic [ref=e486]: "#brunch"
+                  - generic [ref=e487]: "#live music"
+                  - generic [ref=e488]: "+1"
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e187] [cursor=pointer]:
+    - img [ref=e188]
+  - alert [ref=e489]

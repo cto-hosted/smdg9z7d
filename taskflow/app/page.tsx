@@ -1,89 +1,72 @@
 'use client';
 
 import { useState } from 'react';
-import { useTasks } from '@/lib/task-store';
-import { StatsCard } from '@/components/analytics/stats-card';
-import { TaskCard } from '@/components/tasks/task-card';
-import { TaskForm } from '@/components/tasks/task-form';
+import { Trend } from '@/lib/types';
+import { useTrends } from '@/lib/trend-store';
+import { TrendFeed } from '@/components/trends/trend-feed';
+import { LocationSearch } from '@/components/location/location-search';
+import { TrendScore } from '@/components/trends/trend-score';
 import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
 import { Skeleton } from '@/components/ui/skeleton';
-import {
-  CheckCircle2,
-  Clock,
-  ListTodo,
-  AlertTriangle,
-  Plus,
-  TrendingUp,
-  Zap,
-} from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Flame, TrendingUp, MapPin, Sparkles, ArrowRight, Zap } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { format, parseISO, isAfter } from 'date-fns';
 import { cn } from '@/lib/utils';
+import { useRouter } from 'next/navigation';
 
 export default function DashboardPage() {
-  const { tasks, getStats, isLoaded } = useTasks();
-  const [createOpen, setCreateOpen] = useState(false);
-
-  const stats = getStats();
-  const recentTasks = tasks.slice(0, 6);
-  const upcomingTasks = tasks
-    .filter(
-      (t) =>
-        t.status !== 'completed' &&
-        t.dueDate &&
-        isAfter(parseISO(t.dueDate), new Date())
-    )
-    .sort((a, b) => parseISO(a.dueDate!).getTime() - parseISO(b.dueDate!).getTime())
-    .slice(0, 3);
+  const { getTrendStats, selectedLocation, getFilteredTrends, isLoaded, userMode, setUserMode } = useTrends();
+  const router = useRouter();
+  const stats = getTrendStats();
+  const topTrends = getFilteredTrends().slice(0, 3);
 
   const statsData = [
     {
-      title: 'Total Tasks',
-      value: stats.total,
-      description: 'All tasks in your workspace',
-      icon: ListTodo,
-      gradient: 'from-violet-500 to-indigo-600',
+      title: 'Active Trends',
+      value: stats.totalTrends,
+      description: `trending in ${selectedLocation?.name || 'your area'}`,
+      icon: Flame,
+      gradient: 'from-rose-500 via-orange-500 to-amber-500',
     },
     {
-      title: 'Completed',
-      value: stats.completed,
-      description: `${stats.completionRate}% completion rate`,
-      icon: CheckCircle2,
-      gradient: 'from-emerald-500 to-teal-600',
+      title: 'Viral & Explosive',
+      value: stats.viralTrends,
+      description: 'trends with high growth',
+      icon: TrendingUp,
+      gradient: 'from-orange-500 to-rose-500',
     },
     {
-      title: 'In Progress',
-      value: stats.inProgress,
-      description: 'Currently being worked on',
-      icon: Clock,
-      gradient: 'from-blue-500 to-cyan-600',
+      title: 'Rising Stars',
+      value: stats.risingTrends,
+      description: 'trends gaining momentum',
+      icon: Zap,
+      gradient: 'from-amber-500 to-orange-500',
     },
     {
-      title: 'Overdue',
-      value: stats.overdue,
-      description: 'Need immediate attention',
-      icon: AlertTriangle,
-      gradient: 'from-rose-500 to-pink-600',
+      title: 'Avg Score',
+      value: stats.avgScore,
+      description: 'trend score across all',
+      icon: Sparkles,
+      gradient: 'from-violet-500 to-rose-500',
     },
   ];
 
+  const handleTrendClick = (trend: Trend) => {
+    router.push(`/trend/${trend.id}`);
+  };
+
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold">Overview</h2>
+          <h2 className="text-xl font-bold">Trending Now</h2>
           <p className="text-sm text-muted-foreground mt-0.5">
-            {format(new Date(), 'EEEE, MMMM d, yyyy')}
+            Discover what's hot in {selectedLocation?.name || 'your city'}
           </p>
         </div>
-        <Button
-          onClick={() => setCreateOpen(true)}
-          className="gap-2 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white border-0 shadow-lg shadow-violet-500/20"
-        >
-          <Plus className="h-4 w-4" />
-          <span className="hidden sm:inline">New Task</span>
-        </Button>
+        <div className="w-full md:w-72">
+          <LocationSearch />
+        </div>
       </div>
 
       {!isLoaded ? (
@@ -95,121 +78,116 @@ export default function DashboardPage() {
       ) : (
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
           {statsData.map((s, i) => (
-            <StatsCard key={s.title} {...s} delay={i * 0.05} />
+            <motion.div
+              key={s.title}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.05 }}
+            >
+              <Card className="bg-white/5 border-white/10 hover:border-rose-500/30 transition-all group">
+                <CardContent className="p-4">
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <p className="text-xs text-muted-foreground">{s.title}</p>
+                      <p className="text-3xl font-bold mt-1 bg-gradient-to-r bg-clip-text text-transparent {s.gradient}">
+                        {s.value}
+                      </p>
+                      <p className="text-[10px] text-muted-foreground mt-1">
+                        {s.description}
+                      </p>
+                    </div>
+                    <div className={cn('p-2 rounded-lg bg-gradient-to-br', s.gradient)}>
+                      <s.icon className="h-4 w-4 text-white" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
           ))}
         </div>
       )}
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-        className="glass-card rounded-xl border border-white/10 p-5"
-      >
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-2">
-            <TrendingUp className="h-4 w-4 text-violet-400" />
-            <h3 className="text-sm font-semibold">Progress Overview</h3>
-          </div>
-          <span className="text-sm font-bold text-violet-400">{stats.completionRate}%</span>
-        </div>
-        <Progress
-          value={stats.completionRate}
-          className="h-2 bg-white/5"
-        />
-        <div className="mt-3 grid grid-cols-3 gap-4 text-center text-xs">
-          <div>
-            <div className="font-semibold text-emerald-400">{stats.completed}</div>
-            <div className="text-muted-foreground">Completed</div>
-          </div>
-          <div>
-            <div className="font-semibold text-blue-400">{stats.inProgress}</div>
-            <div className="text-muted-foreground">In Progress</div>
-          </div>
-          <div>
-            <div className="font-semibold text-slate-400">{stats.todo}</div>
-            <div className="text-muted-foreground">To Do</div>
-          </div>
-        </div>
-      </motion.div>
-
-      <div className="grid gap-6 lg:grid-cols-3">
-        <div className="lg:col-span-2 space-y-3">
-          <div className="flex items-center justify-between">
-            <h3 className="text-sm font-semibold">Recent Tasks</h3>
-            <a href="/tasks" className="text-xs text-violet-400 hover:text-violet-300 transition-colors">
-              View all →
-            </a>
-          </div>
-          {!isLoaded ? (
-            <div className="grid gap-3 sm:grid-cols-2">
-              {Array.from({ length: 4 }).map((_, i) => (
-                <Skeleton key={i} className="h-28 rounded-xl" />
-              ))}
+      {topTrends.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="glass-card rounded-xl border border-white/10 p-5"
+        >
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <Flame className="h-4 w-4 text-rose-400" />
+              <h3 className="text-sm font-semibold">Top 3 Trends</h3>
             </div>
-          ) : recentTasks.length === 0 ? (
-            <div className="glass-card rounded-xl border border-white/10 p-8 text-center">
-              <Zap className="h-8 w-8 text-violet-400 mx-auto mb-2" />
-              <p className="text-sm text-muted-foreground">No tasks yet. Create your first task!</p>
-            </div>
-          ) : (
-            <div className="grid gap-3 sm:grid-cols-2">
-              {recentTasks.map((task) => (
-                <TaskCard key={task.id} task={task} />
-              ))}
-            </div>
-          )}
-        </div>
-
-        <div className="space-y-3">
-          <h3 className="text-sm font-semibold">Upcoming Deadlines</h3>
-          {!isLoaded ? (
-            <div className="space-y-2">
-              {Array.from({ length: 3 }).map((_, i) => (
-                <Skeleton key={i} className="h-16 rounded-xl" />
-              ))}
-            </div>
-          ) : upcomingTasks.length === 0 ? (
-            <div className="glass-card rounded-xl border border-white/10 p-6 text-center">
-              <CheckCircle2 className="h-8 w-8 text-emerald-400 mx-auto mb-2" />
-              <p className="text-sm text-muted-foreground">No upcoming deadlines</p>
-            </div>
-          ) : (
-            <div className="space-y-2">
-              {upcomingTasks.map((task, i) => (
-                <motion.div
-                  key={task.id}
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.3 + i * 0.05 }}
-                  className="glass-card rounded-xl border border-white/10 p-3.5 hover:border-violet-500/30 transition-all"
-                >
-                  <div className="flex items-start gap-3">
-                    <div
-                      className={cn(
-                        'mt-0.5 h-2 w-2 rounded-full flex-shrink-0',
-                        task.priority === 'high'
-                          ? 'bg-rose-500'
-                          : task.priority === 'medium'
-                          ? 'bg-amber-500'
-                          : 'bg-emerald-500'
-                      )}
-                    />
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs font-medium truncate">{task.title}</p>
-                      <p className="text-[11px] text-muted-foreground mt-0.5">
-                        Due {format(parseISO(task.dueDate!), 'MMM d')}
-                      </p>
-                    </div>
+            <Button
+              variant="link"
+              className="text-xs text-rose-400"
+              onClick={() => router.push('/trending')}
+            >
+              View all <ArrowRight className="h-3 w-3 ml-1" />
+            </Button>
+          </div>
+          
+          <div className="grid gap-4 md:grid-cols-3">
+            {topTrends.map((trend, i) => (
+              <motion.div
+                key={trend.id}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.3 + i * 0.1 }}
+                className="group cursor-pointer"
+                onClick={() => handleTrendClick(trend)}
+              >
+                <div className="flex items-center gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-all border border-transparent hover:border-rose-500/30">
+                  <div className={cn(
+                    'flex-shrink-0 text-2xl font-bold bg-gradient-to-br bg-clip-text text-transparent',
+                    i === 0 ? 'from-rose-500 to-orange-500' :
+                    i === 1 ? 'from-orange-500 to-amber-500' :
+                    'from-amber-500 to-yellow-500'
+                  )}>
+                    #{i + 1}
                   </div>
-                </motion.div>
-              ))}
-            </div>
-          )}
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium truncate group-hover:text-rose-400 transition-colors">
+                      {trend.name}
+                    </p>
+                    <p className="text-xs text-muted-foreground capitalize">
+                      {trend.category} • {trend.level}
+                    </p>
+                  </div>
+                  <TrendScore score={trend.score} level={trend.level} size="sm" showLabel={false} />
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      )}
+
+      <div className="flex items-center justify-between">
+        <h3 className="text-lg font-semibold">All Trends</h3>
+        <div className="flex items-center gap-2">
+          <Button
+            variant={userMode === 'creator' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setUserMode('creator')}
+            className={userMode === 'creator' ? 'bg-rose-500 hover:bg-rose-600' : 'border-white/10'}
+          >
+            <Sparkles className="h-3.5 w-3.5 mr-1.5" />
+            Creator
+          </Button>
+          <Button
+            variant={userMode === 'business' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setUserMode('business')}
+            className={userMode === 'business' ? 'bg-orange-500 hover:bg-orange-600' : 'border-white/10'}
+          >
+            <TrendingUp className="h-3.5 w-3.5 mr-1.5" />
+            Business
+          </Button>
         </div>
       </div>
 
-      <TaskForm open={createOpen} onOpenChange={setCreateOpen} />
+      <TrendFeed onTrendClick={handleTrendClick} />
     </div>
   );
 }
