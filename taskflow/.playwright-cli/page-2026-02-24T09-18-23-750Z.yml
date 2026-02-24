@@ -1,0 +1,143 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e5]:
+      - generic [ref=e6]:
+        - img [ref=e8]
+        - generic [ref=e10]: LocalTrend
+        - generic [ref=e11]: AI
+      - navigation [ref=e12]:
+        - link "Feed" [ref=e13] [cursor=pointer]:
+          - /url: /
+          - img [ref=e14]
+          - text: Feed
+        - link "Creator" [ref=e20] [cursor=pointer]:
+          - /url: /creator
+          - img [ref=e21]
+          - text: Creator
+        - link "Business" [ref=e24] [cursor=pointer]:
+          - /url: /business
+          - img [ref=e25]
+          - text: Business
+      - generic [ref=e28]:
+        - paragraph [ref=e29]: Mode
+        - generic [ref=e30]:
+          - button "Creator" [ref=e31]:
+            - img [ref=e32]
+            - generic [ref=e35]: Creator
+          - button "Business" [ref=e36]:
+            - img [ref=e37]
+            - generic [ref=e39]: Business
+      - generic [ref=e41]:
+        - paragraph [ref=e42]:
+          - img [ref=e43]
+          - text: Pro Tip
+        - paragraph [ref=e45]: Switch between Creator and Business modes to get personalized insights.
+    - generic [ref=e46]:
+      - banner [ref=e47]:
+        - generic [ref=e48]:
+          - generic [ref=e51]:
+            - img [ref=e52]
+            - textbox "Search city..." [ref=e55]
+          - generic [ref=e57]:
+            - img [ref=e58]
+            - generic [ref=e61]: Berlin
+        - generic [ref=e62]:
+          - button [ref=e63]:
+            - img [ref=e64]
+          - generic [ref=e69]: creator
+          - generic [ref=e72]: LT
+      - main [ref=e73]:
+        - generic [ref=e74]:
+          - generic [ref=e75]:
+            - generic [ref=e76]:
+              - heading "Trending Now" [level=2] [ref=e77]
+              - paragraph [ref=e78]: Discover what's hot in Berlin
+            - generic [ref=e81]:
+              - img [ref=e82]
+              - textbox "Search city..." [ref=e85]
+          - generic [ref=e91]:
+            - generic [ref=e92]:
+              - generic [ref=e93]:
+                - img [ref=e94]
+                - heading "Top 3 Trends" [level=3] [ref=e96]
+              - button "View all" [ref=e97]:
+                - text: View all
+                - img
+            - generic [ref=e98]:
+              - generic [ref=e100] [cursor=pointer]:
+                - generic [ref=e101]: "#1"
+                - generic [ref=e102]:
+                  - paragraph [ref=e103]: Techno Night
+                  - paragraph [ref=e104]: nightlife • explosive
+                - generic [ref=e106]:
+                  - img [ref=e107]
+                  - generic [ref=e110]:
+                    - generic: "95"
+              - generic [ref=e112] [cursor=pointer]:
+                - generic [ref=e113]: "#2"
+                - generic [ref=e114]:
+                  - paragraph [ref=e115]: Street Food Festival
+                  - paragraph [ref=e116]: food • explosive
+                - generic [ref=e118]:
+                  - img [ref=e119]
+                  - generic [ref=e122]:
+                    - generic: "92"
+              - generic [ref=e124] [cursor=pointer]:
+                - generic [ref=e125]: "#3"
+                - generic [ref=e126]:
+                  - paragraph [ref=e127]: Rooftop Yoga
+                  - paragraph [ref=e128]: lifestyle • viral
+                - generic [ref=e130]:
+                  - img [ref=e131]
+                  - generic [ref=e134]:
+                    - generic: "78"
+          - generic [ref=e135]:
+            - heading "All Trends" [level=3] [ref=e136]
+            - generic [ref=e137]:
+              - button "Creator" [ref=e138]:
+                - img
+                - text: Creator
+              - button "Business" [ref=e139]:
+                - img
+                - text: Business
+          - generic [ref=e141]:
+            - generic [ref=e142]:
+              - button "Filters" [ref=e143]:
+                - img
+                - generic [ref=e144]: Filters
+              - generic [ref=e145]:
+                - button "All" [ref=e146]
+                - button "🍔 Food & Drinks" [ref=e147]:
+                  - generic [ref=e148]: 🍔
+                  - generic [ref=e149]: Food & Drinks
+                - button "🎉 Events" [ref=e150]:
+                  - generic [ref=e151]: 🎉
+                  - generic [ref=e152]: Events
+                - button "🎵 Music" [ref=e153]:
+                  - generic [ref=e154]: 🎵
+                  - generic [ref=e155]: Music
+                - button "👗 Fashion" [ref=e156]:
+                  - generic [ref=e157]: 👗
+                  - generic [ref=e158]: Fashion
+                - button "💻 Tech & Startups" [ref=e159]:
+                  - generic [ref=e160]: 💻
+                  - generic [ref=e161]: Tech & Startups
+                - button "⚽ Sports" [ref=e162]:
+                  - generic [ref=e163]: ⚽
+                  - generic [ref=e164]: Sports
+                - button "🌙 Nightlife" [ref=e165]:
+                  - generic [ref=e166]: 🌙
+                  - generic [ref=e167]: Nightlife
+                - button "✨ Lifestyle" [ref=e168]:
+                  - generic [ref=e169]: ✨
+                  - generic [ref=e170]: Lifestyle
+            - generic [ref=e171]:
+              - img [ref=e172]
+              - combobox [ref=e174]:
+                - option "Score" [selected]
+                - option "Mentions"
+                - option "Growth Rate"
+                - option "Recent"
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e187] [cursor=pointer]:
+    - img [ref=e188]
